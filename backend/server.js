@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: false }));
 //routes
 app.use("/", userRouter);
 app.use("/", vendorRouter);
-app.use("/products/", productRouter);
+app.use("/products", productRouter);
 
 //server start
 app.listen(PORT, () => {
