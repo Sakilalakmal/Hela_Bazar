@@ -211,5 +211,26 @@ const OrderManagementController = {
       order: order,
     });
   }),
+
+  getAllOrderForUser: asyncHandler(async (req, res) => {
+    const userId = req.user.id;
+
+    const orders = await Order.find({ customerId: userId })
+      .populate("customerId", "username email")
+      .populate("products.productId", "name price image")
+      .populate("products.vendorId", "username email")
+      .sort({ createdAt: -1 });
+
+    if (!orders || orders.length === 0) {
+      return res.status(404).json({
+        message: "You have no orders yet browse products and place your order",
+      });
+    }
+
+    res.status(200).json({
+      message: "All your orders fetched successfully",
+      orders,
+    });
+  }),
 };
 module.exports = OrderManagementController;
