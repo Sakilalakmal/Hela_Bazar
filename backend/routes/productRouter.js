@@ -13,4 +13,24 @@ productRouter.post(
   productController.createProducts
 );
 
+productRouter.get(
+  "/all/products",
+  isAuthenticatedUser,
+  productController.getAllProducts
+);
+
+productRouter.get(
+  "/details/:productId",
+  isAuthenticatedUser,
+  productController.getSingleproduct
+);
+
+productRouter.put(
+  "/update/:productId",
+  isAuthenticatedUser,
+  hasRole(["vendor"]),
+  upload.array("images", 5),
+  productController.updateProduct
+);
+
 module.exports = productRouter;
