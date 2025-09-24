@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const Product = require("../model/product_model");
 const Cart = require("../model/cart_model");
 const Order = require("../model/order_model");
+const { default: mongoose } = require("mongoose");
 
 const OrderManagementController = {
   addTocart: asyncHandler(async (req, res) => {

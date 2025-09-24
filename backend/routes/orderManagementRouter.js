@@ -33,5 +33,4 @@ orderManagementRouter.get(
   OrderManagementController.getAllOrderForUser
 );
 
-
 module.exports = orderManagementRouter;
