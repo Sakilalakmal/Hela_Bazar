@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Product = require("../model/product_model");
 const Cart = require("../model/cart_model");
+const Order = require("../model/order_model");
 
 const OrderManagementController = {
   addTocart: asyncHandler(async (req, res) => {
@@ -160,26 +161,26 @@ const OrderManagementController = {
           message: `Insufficient stock for product ${product.name}. Available stock: ${product.stock}`,
         });
       }
+
+      //calculate total price
+      const totalPrice = product.price * cartItems.quantity;
+      totalAmount += totalPrice;
+
+      //push to order products array
+      orderProducts.push({
+        productId: product._id,
+        vendorId: product.vendorId,
+        name: product.name,
+        image:
+          product.images && product.images.length > 0 ? product.images[0] : "",
+        price: product.price,
+        quantity: cartItems.quantity,
+        customization: cartItems.customization || {},
+      });
     }
 
-    //calculate total price
-    const totalPrice = product.price * cartItems.quantity;
-    totalAmount += totalPrice;
-
-    //push to order products array
-    orderProducts.push({
-      productId: product._id,
-      vendorId: product.vendorId,
-      name: product.name,
-      image:
-        product.images && product.images.length > 0 ? product.images[0] : "",
-      price: product.price,
-      quantity: cartItems.quantity,
-      customization: cartItems.customization || {},
-    });
-
     //create order document
-    const Order = new Order({
+    const order = new Order({
       customerId: userId,
       products: orderProducts,
       shippingAddress,
@@ -191,7 +192,7 @@ const OrderManagementController = {
     });
 
     //save order to MongoDB
-    await Order.save();
+    await order.save();
 
     //reduce product stock
     for (const cartItems of cart.items) {
@@ -206,8 +207,8 @@ const OrderManagementController = {
     await cart.save();
 
     res.status(201).json({
-      message:"Your Order has been placed successfully",
-      order: Order,
+      message: "Your Order has been placed successfully",
+      order: order,
     });
   }),
 };
