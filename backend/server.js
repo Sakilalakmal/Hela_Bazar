@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/dbConnect");
 const userRouter = require("./routes/userRoutes");
 const vendorRouter = require("./routes/vendorRouter");
+const productRouter = require("./routes/productRouter");
 dotenv.config();
 
 //PORT
@@ -19,8 +20,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 //routes
-app.use('/', userRouter);
-app.use('/', vendorRouter);
+app.use("/", userRouter);
+app.use("/", vendorRouter);
+app.use("/products/", productRouter);
 
 //server start
 app.listen(PORT, () => {
