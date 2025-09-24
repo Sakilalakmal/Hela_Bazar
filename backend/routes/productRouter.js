@@ -33,4 +33,11 @@ productRouter.put(
   productController.updateProduct
 );
 
+productRouter.delete(
+  "/delete/:productId",
+  isAuthenticatedUser,
+  hasRole(["vendor"]),
+  productController.deleteProduct
+);
+
 module.exports = productRouter;
