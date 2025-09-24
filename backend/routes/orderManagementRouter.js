@@ -9,4 +9,10 @@ orderManagementRouter.post(
   OrderManagementController.addTocart
 );
 
+orderManagementRouter.delete(
+  "/cart/remove/:productId",
+  isAuthenticatedUser,
+  OrderManagementController.deleteFromCart
+);
+
 module.exports = orderManagementRouter;
