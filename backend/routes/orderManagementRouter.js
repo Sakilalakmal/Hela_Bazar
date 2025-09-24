@@ -21,4 +21,10 @@ orderManagementRouter.post(
   OrderManagementController.removeAllCarts
 );
 
+orderManagementRouter.post(
+  "/placeorder",
+  isAuthenticatedUser,
+  OrderManagementController.placeOrder
+);
+
 module.exports = orderManagementRouter;
