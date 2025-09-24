@@ -15,4 +15,10 @@ orderManagementRouter.delete(
   OrderManagementController.deleteFromCart
 );
 
+orderManagementRouter.post(
+  "/cart/removeAll",
+  isAuthenticatedUser,
+  OrderManagementController.removeAllCarts
+);
+
 module.exports = orderManagementRouter;
