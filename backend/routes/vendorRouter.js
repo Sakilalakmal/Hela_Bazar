@@ -13,7 +13,7 @@ vendorRouter.post("/vendor/apply",isAuthenticatedUser,upload.fields([
 vendorRouter.put('/vendor/update',isAuthenticatedUser,hasRole(['vendor']),upload.fields([
     {name:'shopImages',maxCount:5},
     {name:'productImages',maxCount:10}
-]),vendorController.updateVendorApplication);
+]),vendorController.updateVendorProfile);
 
 
 module.exports = vendorRouter;
