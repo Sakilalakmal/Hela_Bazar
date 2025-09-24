@@ -50,5 +50,8 @@ const VendorApplicationSchema = new mongoose.Schema({
   shopImages: { type: [String], required: true }, // URL to the shop image/logo from Cloudinary
 });
 
-const VendorApplication = mongoose.model('VendorApplication', VendorApplicationSchema);
+const VendorApplication = mongoose.model(
+  "VendorApplication",
+  VendorApplicationSchema
+);
 module.exports = VendorApplication;
