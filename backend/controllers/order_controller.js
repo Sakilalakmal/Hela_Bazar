@@ -86,5 +86,33 @@ const OrderManagementController = {
     });
 
   }),
+
+  removeAllCarts: asyncHandler(async(req,res)=>{
+    const userId = req.user.id;
+    
+
+    //check if the user's cart exists to delete
+    const cart = await Cart.findOne({userId});
+
+    if(!cart){
+      res.status(404).json({
+        message:"You dont have cart to remove "
+      }); 
+    }
+
+    if(String(cart.userId) !== String(userId)){
+      res.status(403).json({
+        message: "You are not authorized to delete items from this cart",
+      });
+    }
+
+    cart.items = [];
+    cart.updatedAt = Date.now();
+    await cart.save();
+    res.status(200).json({
+      message:"All items removed from cart successfully",
+      cart,
+    }); 
+  }),
 };
 module.exports = OrderManagementController;
