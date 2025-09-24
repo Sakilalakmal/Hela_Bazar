@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Product = require("../model/product_model");
+const { cloudinary } = require("../service/cloudinary");
 
 const productController = {
   createProducts: asyncHandler(async (req, res) => {
@@ -201,6 +202,46 @@ const productController = {
       product: updatedProduct,
     });
   }),
+
+  deleteProduct : asyncHandler(async(req,res)=>{
+    const {productId} = req.params;
+    const userId = req.user.id;
+
+    const product = await Product.findById(productId);
+    if(!product){
+        res.status(404).json({
+            message:"Product not found try again"
+        });
+    }
+
+    if(String(product.vendorId) !== String(userId)){
+        res.status(403).json({
+            message:"You are not authorized to delete this product"
+        });
+    }
+
+    // Delete images from Cloudinary
+    if(product.images && product.images.length > 0){
+        for(const imageUrl of product.images){
+            const publicId = getPublicIdFromUrl(imageUrl);
+            if(publicId){
+                await cloudinary.uploader.destroy(publicId);
+            }
+        }
+    }
+
+    await Product.findOneAndDelete({_id:productId});
+
+    res.status(201).json({
+        message:"Product deleted successfully"});
+  }),
 };
+
+function getPublicIdFromUrl(url) {
+  // This works for default Cloudinary URLs
+  // Example: .../hela_bazar/product123_1713568956.png => hela_bazar/product123_1713568956
+  const matches = url.match(/\/upload\/(?:v\d+\/)?([^\.]+)\./);
+  return matches ? matches[1] : null;
+}
 
 module.exports = productController;
