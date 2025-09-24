@@ -89,6 +89,7 @@ const vendorController = {
   }),
 
   updateVendorProfile: asyncHandler(async (req, res) => {
+    
     const userId = req.user.id;
 
     //find vendor current profile
