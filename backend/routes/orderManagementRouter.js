@@ -27,4 +27,11 @@ orderManagementRouter.post(
   OrderManagementController.placeOrder
 );
 
+orderManagementRouter.get(
+  "/myOrders",
+  isAuthenticatedUser,
+  OrderManagementController.getAllOrderForUser
+);
+
+
 module.exports = orderManagementRouter;
