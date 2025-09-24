@@ -56,7 +56,7 @@ const OrderManagementController = {
 
   deleteFromCart: asyncHandler(async (req, res) => {
     const userId = req.user.id;
-    const productId = req.params;
+    const {productId} = req.params;
 
     //check if the user's cart exists to delete
     const cart = await Cart.findOne({ userId });
