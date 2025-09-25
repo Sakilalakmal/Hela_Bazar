@@ -83,6 +83,26 @@ const reviewsController = {
       });
     }
   }),
+
+  getReviewsForProduct: asyncHandler(async (req, res) => {
+    const { productId } = req.params;
+
+    const reviews = await Review.find({ productId }).populate(
+      "userId",
+      "username email"
+    );
+
+    if (!reviews || reviews.length === 0) {
+      res.status(404).json({
+        message: "No reviews found for this product",
+      });
+    }
+
+    res.status(200).json({
+      message: "Reviews fetched successfully",
+      reviews,
+    });
+  }),
 };
 
 module.exports = reviewsController;
