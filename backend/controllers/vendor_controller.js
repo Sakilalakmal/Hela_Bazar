@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const VendorApplication = require("../model/vendor_application_form");
 const User = require("../model/user_model");
+const Order = require("../model/order_model");
 
 const vendorController = {
   createVendorApplication: asyncHandler(async (req, res) => {
@@ -89,7 +90,6 @@ const vendorController = {
   }),
 
   updateVendorProfile: asyncHandler(async (req, res) => {
-    
     const userId = req.user.id;
 
     //find vendor current profile
@@ -115,28 +115,35 @@ const vendorController = {
     } = req.body;
 
     //handle images logics
-    const shopImages = req.files?.shopImages ? req.files.shopImages.map((file) => file.path) : vendorProfile.shopImages;
+    const shopImages = req.files?.shopImages
+      ? req.files.shopImages.map((file) => file.path)
+      : vendorProfile.shopImages;
 
     //handle product details with images
-     const productImages = req.files?.productImages
+    const productImages = req.files?.productImages
       ? req.files.productImages.map((file, index) => ({
           title: req.body[`productTitle_${index}`],
           description: req.body[`productDescription_${index}`],
           images: [file.path],
-      }))
+        }))
       : vendorProfile.initialProductList;
 
     //update vendor profile
     vendorProfile.businessName = businessName || vendorProfile.businessName;
     vendorProfile.taxId = taxId || vendorProfile.taxId;
     vendorProfile.category = category || vendorProfile.category;
-    vendorProfile.certifications = certifications || vendorProfile.certifications;
-    vendorProfile.businessDescription = businessDescription || vendorProfile.businessDescription;
+    vendorProfile.certifications =
+      certifications || vendorProfile.certifications;
+    vendorProfile.businessDescription =
+      businessDescription || vendorProfile.businessDescription;
     vendorProfile.contactPerson = contactPerson || vendorProfile.contactPerson;
-    vendorProfile.businessAddress = businessAddress || vendorProfile.businessAddress;
-    vendorProfile.businessRegistrationNumber = businessRegistrationNumber || vendorProfile.businessRegistrationNumber;
+    vendorProfile.businessAddress =
+      businessAddress || vendorProfile.businessAddress;
+    vendorProfile.businessRegistrationNumber =
+      businessRegistrationNumber || vendorProfile.businessRegistrationNumber;
     vendorProfile.storeType = storeType || vendorProfile.storeType;
-    vendorProfile.paymentDetails = paymentDetails || vendorProfile.paymentDetails;
+    vendorProfile.paymentDetails =
+      paymentDetails || vendorProfile.paymentDetails;
     vendorProfile.shopImages = shopImages; // Updated shop images
     vendorProfile.initialProductList = productImages; // Updated product images
 
@@ -147,6 +154,46 @@ const vendorController = {
       message: "Vendor profile updated successfully",
       vendorProfile,
     });
+  }),
+
+  getVendorOrder: asyncHandler(async (req, res) => {
+    try {
+      const userId = req.user.id;
+
+      //find vendor Application to get vendor id
+      const vendorApplication = await VendorApplication.findOne({ userId });
+      if (!vendorApplication) {
+        return res.status(404).json({
+          message: "Vendor application not found",
+        });
+      }
+
+      //declare vendor Id for future usage
+      const vendorId = vendorApplication._id;
+
+      //fetch order for this vendor
+      const vendorOrders = await Order.find({ "products.vendorId": vendorId })
+        .populate("customerId", "name email")
+        .populate("products.productId", "name price image")
+        .populate("products.vendorId", "name email")
+        .sort({ createdAt: -1 });
+
+      if (!vendorOrders || vendorOrders.length === 0) {
+        return res.status(404).json({
+          message: "No orders found for your products yet",
+        });
+      }
+
+      res.status(200).json({
+        message: "Vendor orders fetched successfully",
+        orders: vendorOrders,
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: "Error fetching vendor orders",
+        error: error.message,
+      });
+    }
   }),
 };
 
