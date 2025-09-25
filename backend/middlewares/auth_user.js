@@ -23,7 +23,7 @@ const isAuthenticatedUser  = async(req,resizeBy,next)=>{
         req.user = decoded;
         next();
     } catch (error) {
-        return res.status(401).json({
+        return res.status(400).json({
             message:"Unauthorized , please login to access this resource"
         });
     }
