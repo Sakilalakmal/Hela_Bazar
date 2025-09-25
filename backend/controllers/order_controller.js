@@ -4,6 +4,7 @@ const Cart = require("../model/cart_model");
 const Order = require("../model/order_model");
 const { default: mongoose, get } = require("mongoose");
 const { getSingleproduct } = require("./product_controller");
+const VendorApplication = require("../model/vendor_application_form");
 
 const OrderManagementController = {
   addTocart: asyncHandler(async (req, res) => {
@@ -262,6 +263,63 @@ const OrderManagementController = {
 
     res.status(200).json({
       message: "Order details fetched successfully",
+      order,
+    });
+  }),
+
+  updateStatusInOrder: asyncHandler(async (req, res) => {
+    const { orderId } = req.params;
+    const { status } = req.body;
+    const userId = req.user.id;
+
+    const allowedStatuses = [
+      "pending",
+      "confirmed",
+      "processing",
+      "shipped",
+      "delivered",
+      "cancelled",
+    ];
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({
+        message: "Invalid status value",
+      });
+    }
+
+    //find order here
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({
+        message: " This order not found",
+      });
+    }
+
+    //check if the vendor owned this orders to update status
+    const vendorProfile = await VendorApplication.findOne({ userId });
+
+    if (!vendorProfile) {
+      return res.status(404).json({
+        message: "Vendor application not found You are not vendor anymore",
+      });
+    }
+
+    const isVendorOrder = order.products.some(
+      (item) => String(item.vendorId) === String(vendorProfile._id)
+    );
+
+    if (!isVendorOrder) {
+      return res.status(403).json({
+        message: "You are not authorized to update this order status",
+      });
+    }
+
+    order.status = status;
+    order.updatedAt = Date.now();
+    await order.save();
+
+    res.status(200).json({
+      message: "Order status updated successfully",
       order,
     });
   }),
