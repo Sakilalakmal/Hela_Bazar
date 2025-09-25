@@ -2,7 +2,8 @@ const asyncHandler = require("express-async-handler");
 const Product = require("../model/product_model");
 const Cart = require("../model/cart_model");
 const Order = require("../model/order_model");
-const { default: mongoose } = require("mongoose");
+const { default: mongoose, get } = require("mongoose");
+const { getSingleproduct } = require("./product_controller");
 
 const OrderManagementController = {
   addTocart: asyncHandler(async (req, res) => {
@@ -231,6 +232,33 @@ const OrderManagementController = {
     res.status(200).json({
       message: "All your orders fetched successfully",
       orders,
+    });
+  }),
+
+  getSingleOrderDetails:asyncHandler(async(req,res)=>{
+    const userId = req.user.id;
+    const {orderId} = req.params;
+
+    const order = await Order.findById(orderId).populate("customerId","username email")
+    .populate("products.productId","name price image")
+    .populate("products.vendorId","username email");
+
+    //check order exists
+    if(!order){
+      res.status(404).json({
+        message:"This order not found",
+      });
+    }
+
+    if(String(order.customerId._id) !== String(userId)){
+      res.status(403).json({
+        message:"You are not authorized to view this order details",
+      });
+    }
+
+    res.status(200).json({
+      message:"Order details fetched successfully",
+      order,
     });
   }),
 };
