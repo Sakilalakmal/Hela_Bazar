@@ -350,6 +350,7 @@ const OrderManagementController = {
     //set status to cancelled and save the order
     order.status = "cancelled";
     order.updatedAt = Date.now();
+
     await order.save();
 
     //restore product stock
