@@ -169,11 +169,11 @@ const vendorController = {
       }
 
       //declare vendor Id for future usage
-      const vendorId = vendorApplication._id;
+      const vendorId = vendorApplication.userId;
 
       //fetch order for this vendor
       const vendorOrders = await Order.find({ "products.vendorId": vendorId })
-        .populate("customerId", "name email")
+        .populate("customerId", "username email")
         .populate("products.productId", "name price image")
         .populate("products.vendorId", "name email")
         .sort({ createdAt: -1 });
