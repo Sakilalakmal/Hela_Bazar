@@ -1,6 +1,7 @@
 const express = require("express");
 const isAuthenticatedUser = require("../middlewares/auth_user");
 const OrderManagementController = require("../controllers/order_controller");
+const hasRole = require("../middlewares/has_role_middleware");
 const orderManagementRouter = express.Router();
 
 orderManagementRouter.post(
@@ -38,5 +39,11 @@ orderManagementRouter.get(
   isAuthenticatedUser,
   OrderManagementController.getSingleOrderDetails
 );
+
+orderManagementRouter.put('/update/status/:orderId',
+isAuthenticatedUser,
+hasRole(['admin', 'vendor']),
+OrderManagementController.updateStatusInOrder
+),
 
 module.exports = orderManagementRouter;
