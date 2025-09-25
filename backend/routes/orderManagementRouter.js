@@ -40,10 +40,17 @@ orderManagementRouter.get(
   OrderManagementController.getSingleOrderDetails
 );
 
-orderManagementRouter.patch('/update/status/:orderId',
-isAuthenticatedUser,
-hasRole(['admin', 'vendor']),
-OrderManagementController.updateStatusInOrder
+orderManagementRouter.patch(
+  "/update/status/:orderId",
+  isAuthenticatedUser,
+  hasRole(["admin", "vendor"]),
+  OrderManagementController.updateStatusInOrder
 ),
+  orderManagementRouter.patch(
+    "/cancel/:orderId",
+    isAuthenticatedUser,
+    hasRole(["consumer", "vendor"]),
+    OrderManagementController.cancelOrder
+  );
 
 module.exports = orderManagementRouter;
