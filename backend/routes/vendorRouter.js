@@ -5,15 +5,33 @@ const { upload } = require("../service/cloudinary");
 const hasRole = require("../middlewares/has_role_middleware");
 const vendorRouter = express.Router();
 
-vendorRouter.post("/vendor/apply",isAuthenticatedUser,upload.fields([
-    {name:'shopImages',maxCount:5},
-    {name:'productImages',maxCount:10}
-]) ,vendorController.createVendorApplication);
+vendorRouter.post(
+  "/vendor/apply",
+  isAuthenticatedUser,
+  upload.fields([
+    { name: "shopImages", maxCount: 5 },
+    { name: "productImages", maxCount: 10 },
+  ]),
+  vendorController.createVendorApplication
+);
 
-vendorRouter.put('/vendor/update',isAuthenticatedUser,hasRole(['vendor']),upload.fields([
-    {name:'shopImages',maxCount:5},
-    {name:'productImages',maxCount:10}
-]),vendorController.updateVendorProfile);
+vendorRouter.put(
+  "/vendor/update",
+  isAuthenticatedUser,
+  hasRole(["vendor"]),
+  upload.fields([
+    { name: "shopImages", maxCount: 5 },
+    { name: "productImages", maxCount: 10 },
+  ]),
+  vendorController.updateVendorProfile
+);
 
+//get all order for specific vendor have
+vendorRouter.get(
+  "/vendor/orders",
+  isAuthenticatedUser,
+  hasRole(["vendor"]),
+  vendorController.getVendorOrder
+);
 
 module.exports = vendorRouter;
