@@ -323,5 +323,46 @@ const OrderManagementController = {
       order,
     });
   }),
+
+  cancelOrder: asyncHandler(async (req, res) => {
+    const userId = req.user.id;
+    const { orderId } = req.params;
+
+    //find order here
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return res.status(404).json({
+        message: "Order not found",
+      });
+    }
+
+    //only user who placed the order or admin can cancel the order
+    if (String(order.customerId) !== String(userId)) {
+      return res.status(403).json({
+        message: "You are not authorized to cancel this order",
+      });
+    }
+    //refund logic
+    if (order.paymentStatus === "paid") {
+      order.paymentStatus = "refunded";
+    }
+
+    //set status to cancelled and save the order
+    order.status = "cancelled";
+    order.updatedAt = Date.now();
+    await order.save();
+
+    //restore product stock
+    for (const item of order.products) {
+      await Product.findByIdAndUpdate(item.productId, {
+        $inc: { stock: item.quantity },
+      });
+    }
+
+    res.status(200).json({
+      message: "Order has been cancelled & payement refunded to you later ...",
+      order,
+    });
+  }),
 };
 module.exports = OrderManagementController;
