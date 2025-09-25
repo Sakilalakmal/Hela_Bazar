@@ -40,7 +40,7 @@ orderManagementRouter.get(
   OrderManagementController.getSingleOrderDetails
 );
 
-orderManagementRouter.put('/update/status/:orderId',
+orderManagementRouter.patch('/update/status/:orderId',
 isAuthenticatedUser,
 hasRole(['admin', 'vendor']),
 OrderManagementController.updateStatusInOrder
