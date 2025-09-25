@@ -4,7 +4,7 @@ const reviewsController = require("../controllers/reviews_controller");
 const reviewRouter = express.Router();
 
 reviewRouter.post(
-  "/add/:productId",
+  "/add",
   isAuthenticatedUser,
   reviewsController.createReview
 );
