@@ -235,29 +235,33 @@ const OrderManagementController = {
     });
   }),
 
-  getSingleOrderDetails:asyncHandler(async(req,res)=>{
+  getSingleOrderDetails: asyncHandler(async (req, res) => {
     const userId = req.user.id;
-    const {orderId} = req.params;
+    const { orderId } = req.params;
 
-    const order = await Order.findById(orderId).populate("customerId","username email")
-    .populate("products.productId","name price image")
-    .populate("products.vendorId","username email");
+    const order = await Order.findById(orderId)
+      .populate("customerId", "username email")
+      .populate("products.productId", "name price image")
+      .populate("products.vendorId", "username email");
 
     //check order exists
-    if(!order){
+    if (!order) {
       res.status(404).json({
-        message:"This order not found",
+        message: "This order not found",
       });
     }
 
-    if(String(order.customerId._id) !== String(userId)){
+    if (
+      String(order.customerId._id) !== String(userId) ||
+      req.user.role === "admin"
+    ) {
       res.status(403).json({
-        message:"You are not authorized to view this order details",
+        message: "You are not authorized to view this order details",
       });
     }
 
     res.status(200).json({
-      message:"Order details fetched successfully",
+      message: "Order details fetched successfully",
       order,
     });
   }),

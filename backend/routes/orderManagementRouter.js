@@ -33,4 +33,10 @@ orderManagementRouter.get(
   OrderManagementController.getAllOrderForUser
 );
 
+orderManagementRouter.get(
+  "/detials/:orderId",
+  isAuthenticatedUser,
+  OrderManagementController.getSingleOrderDetails
+);
+
 module.exports = orderManagementRouter;
