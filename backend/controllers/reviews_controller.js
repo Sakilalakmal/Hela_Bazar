@@ -84,3 +84,5 @@ const reviewsController = {
     }
   }),
 };
+
+module.exports = reviewsController;
