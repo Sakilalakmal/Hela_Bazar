@@ -305,7 +305,7 @@ const OrderManagementController = {
     }
 
     const isVendorOrder = order.products.some(
-      (item) => String(item.vendorId) === String(vendorProfile._id)
+      (item) => String(item.vendorId) === String(vendorProfile.userId)
     );
 
     if (!isVendorOrder) {
