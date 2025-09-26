@@ -131,13 +131,46 @@ const reviewsController = {
       }
 
       //check if the current user is owner is this review
-      if(String(review.userId) !== String(userId)){
+      if (String(review.userId) !== String(userId)) {
         return res.status(403).json({
           message: "You are not authorized to update this review",
         });
       }
 
+      if (rating !== undefined) review.rating = rating;
+      if (reviewText !== undefined) review.reviewText = reviewText;
 
+      await review.save();
+      res.status(200).json({
+        message: "Review updated successfully",
+        review,
+      });
+
+      //update product's average rating and review count
+      const allProductReviews = await Review.find({
+        productId: review.productId,
+      });
+      const averageRating =
+        allProductReviews.reduce((sum, r) => sum + r.rating, 0) /
+        allProductReviews.length;
+
+      const product = await Product.findByIdAndUpdate(
+        review.productId,
+        {
+          rating: averageRating,
+          reviewCount: allProductReviews.length,
+        },
+        {
+          new: true,
+        }
+      );
+
+      res.status(200).json({
+        message: "product rating updated successfully",
+        product,
+      });
+
+      await product.save();
     } catch (error) {
       res.status(500).json({
         message: "Internal server error",
