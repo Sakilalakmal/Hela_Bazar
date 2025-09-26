@@ -103,6 +103,48 @@ const reviewsController = {
       reviews,
     });
   }),
+
+  updateReview: asyncHandler(async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const { reviewId } = req.params;
+      const { rating, reviewText } = req.body;
+
+      const review = await Review.findById(reviewId);
+
+      if (!review) {
+        res.status(400).json({
+          message: "This Review Does not exist",
+        });
+      }
+
+      if (!reviewId || !rating || !reviewText) {
+        res.status(400).json({
+          message: "Please provide all required fields",
+        });
+      }
+
+      if (isNaN(rating) || rating < 1 || rating > 5) {
+        return res.status(400).json({
+          message: "Rating must be a number between 1 and 5",
+        });
+      }
+
+      //check if the current user is owner is this review
+      if(String(review.userId) !== String(userId)){
+        return res.status(403).json({
+          message: "You are not authorized to update this review",
+        });
+      }
+
+
+    } catch (error) {
+      res.status(500).json({
+        message: "Internal server error",
+        error: error.message,
+      });
+    }
+  }),
 };
 
 module.exports = reviewsController;
