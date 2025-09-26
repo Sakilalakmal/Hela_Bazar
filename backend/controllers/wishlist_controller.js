@@ -69,6 +69,10 @@ const wishListController = {
           (prodId) => prodId.toString() !== productId
         );
         await wishList.save();
+
+        res.status(200).json({
+            message: "Product removed from wishlist",
+        });
     } catch (error) {
       return res.status(500).json({
         message: "Internal server error",
