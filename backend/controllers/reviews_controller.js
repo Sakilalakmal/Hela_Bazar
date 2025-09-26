@@ -178,6 +178,61 @@ const reviewsController = {
       });
     }
   }),
+
+  deleteReview: asyncHandler(async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const { reviewId } = req.params;
+
+      //find review
+      const review = await Review.findById(reviewId);
+
+      if (!review) {
+        return res.status(404).json({
+          message: "Review not found",
+        });
+      }
+
+      //user validations
+      if (String(review.userId) !== String(userId)) {
+        return res.status(403).json({
+          message: "You are not authorized to delete this review",
+        });
+      }
+
+      const productId = review.productId;
+
+      await review.deleteOne();
+
+      //update product's average rating and review count
+      const allProductReviews = await Review.find({
+        productId,
+      });
+      const averageRating =
+        allProductReviews.reduce((sum, r) => sum + r.rating, 0) /
+        allProductReviews.length;
+
+      await Product.findByIdAndUpdate(
+        productId,
+        {
+          rating: averageRating,
+          reviewCount: allProductReviews.length,
+        },
+        {
+          new: true,
+        }
+      );
+
+      res.status(200).json({
+        message: "Review deleted successfully",
+      });
+    } catch (error) {
+      res.status(400).json({
+        message: "Internal server error",
+        error: error.message,
+      });
+    }
+  }),
 };
 
 module.exports = reviewsController;
