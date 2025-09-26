@@ -64,20 +64,45 @@ const wishListController = {
         });
       }
 
-        // Remove product from wishlist
-        wishList.products = wishList.products.filter(
-          (prodId) => prodId.toString() !== productId
-        );
-        await wishList.save();
+      // Remove product from wishlist
+      wishList.products = wishList.products.filter(
+        (prodId) => prodId.toString() !== productId
+      );
+      await wishList.save();
 
-        res.status(200).json({
-            message: "Product removed from wishlist",
-        });
+      res.status(200).json({
+        message: "Product removed from wishlist",
+      });
     } catch (error) {
       return res.status(500).json({
         message: "Internal server error",
       });
-        }
+    }
+  }),
+
+  removeAllFromWishList: asyncHandler(async (req, res) => {
+    try {
+      const userId = req.user.id;
+
+      //check wishlist exist
+      const wishList = await Wishlist.findOne({ userId });
+      if (!wishList) {
+        return res.status(404).json({
+          message: "You don't have any wishlist to remove",
+        });
+      }
+
+      // Remove all products from wishlist
+      wishList.products = [];
+      await wishList.save();
+      res.status(200).json({
+        message: "All products removed from wishlist",
+      });
+    } catch (error) {
+      return res.status(500).json({
+        message: "Internal server error",
+      });
+    }
   }),
 };
 
