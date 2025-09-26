@@ -40,4 +40,10 @@ productRouter.delete(
   productController.deleteProduct
 );
 
+productRouter.get(
+  "/filtered",
+  isAuthenticatedUser,
+  productController.getFilteredProducts
+);
+
 module.exports = productRouter;
