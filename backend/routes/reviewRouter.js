@@ -11,4 +11,10 @@ reviewRouter.get(
   reviewsController.getReviewsForProduct
 );
 
+reviewRouter.patch(
+  "/update/:reviewId",
+  isAuthenticatedUser,
+  reviewsController.updateReview
+);
+
 module.exports = reviewRouter;
