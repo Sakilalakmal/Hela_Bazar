@@ -15,4 +15,10 @@ wishListRouter.post(
   wishListController.removefromWishList
 );
 
+wishListRouter.post(
+  "/removeAll",
+  isAuthenticatedUser,
+  wishListController.removeAllFromWishList
+);
+
 module.exports = wishListRouter;
