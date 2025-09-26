@@ -17,4 +17,10 @@ reviewRouter.patch(
   reviewsController.updateReview
 );
 
+reviewRouter.delete(
+  "/delete/:reviewId",
+  isAuthenticatedUser,
+  reviewsController.deleteReview
+);
+
 module.exports = reviewRouter;
