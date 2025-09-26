@@ -43,6 +43,38 @@ const wishListController = {
       });
     }
   }),
+
+  removefromWishList: asyncHandler(async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const { productId } = req.params;
+
+      //check wishlist exist
+      const wishList = await Wishlist.findOne({ userId });
+      if (!wishList) {
+        return res.status(404).json({
+          message: "You don't have any wishlist to remove product",
+        });
+      }
+
+      //check product in wishlist
+      if (!wishList.products.includes(productId)) {
+        return res.status(404).json({
+          message: "This product is not in your wishlist",
+        });
+      }
+
+        // Remove product from wishlist
+        wishList.products = wishList.products.filter(
+          (prodId) => prodId.toString() !== productId
+        );
+        await wishList.save();
+    } catch (error) {
+      return res.status(500).json({
+        message: "Internal server error",
+      });
+        }
+  }),
 };
 
 module.exports = wishListController;
