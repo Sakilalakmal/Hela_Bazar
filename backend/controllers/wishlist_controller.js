@@ -92,6 +92,14 @@ const wishListController = {
         });
       }
 
+      //check if the current user owner of this wishlist
+      if (String(wishList.userId) !== String(userId)) {
+        return res.status(403).json({
+          message:
+            "You are not authorized to remove products from this wishlist",
+        });
+      }
+
       // Remove all products from wishlist
       wishList.products = [];
       await wishList.save();
