@@ -9,4 +9,10 @@ wishListRouter.post(
   wishListController.addProductToWishList
 );
 
+wishListRouter.post(
+  "/remove/:productId",
+  isAuthenticatedUser,
+  wishListController.removefromWishList
+);
+
 module.exports = wishListRouter;
