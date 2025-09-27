@@ -3,6 +3,7 @@ const VendorApplication = require("../model/vendor_application_form");
 const User = require("../model/user_model");
 const Order = require("../model/order_model");
 const Product = require("../model/product_model");
+const Review = require("../model/review_model");
 
 const adminController = {
   vendorApproved: asyncHandler(async (req, res) => {
@@ -218,7 +219,7 @@ const adminController = {
         });
       }
 
-      await product.deleteOne({productId});
+      await product.deleteOne({ productId });
       product.save();
 
       res.status(200).json({
@@ -227,6 +228,60 @@ const adminController = {
     } catch (error) {
       res.status(400).json({
         message: "something wrong",
+        error: error.message,
+      });
+    }
+  }),
+
+  //*review management
+
+  //! 1.get all reviews
+  //! 2 . delete review if there are any issues
+
+  getAllReviews: asyncHandler(async (req, res) => {
+    try {
+      const reviews = await Review.find();
+
+      //check if there are any reviews exists
+      if (!reviews) {
+        res.status(400).json({
+          message: "There aren't any reviews exists...",
+        });
+      }
+
+      //if there were reviews showing them
+      res.status(200).json({
+        message: "Getting all reviews",
+        reviews,
+        reviewCount: reviews.length,
+      });
+    } catch (error) {
+      res.status(400).json({
+        message: "something going wrong",
+        error: error.message,
+      });
+    }
+  }),
+
+  deleteSpecificReview: asyncHandler(async (req, res) => {
+    try {
+      const { reviewId } = req.params;
+
+      //check give review exists in reviews collection
+      const review = await Review.findById(reviewId);
+      if (!review) {
+        res.status(400).json({
+          message: "This review doesn't exists in system...",
+        });
+      }
+
+      await review.deleteOne({ reviewId });
+      res.status(200).json({
+        message: "Review deleted successfully",
+      });
+    } catch (error) {
+      res.status(400).json({
+        message: "something going wrong",
         error: error.message,
       });
     }
