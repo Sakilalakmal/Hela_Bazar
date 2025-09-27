@@ -22,7 +22,7 @@ adminRouter.get(
   "/get/consumers",
   isAuthenticatedUser,
   hasRole(["admin"]),
-  adminController.getAllUsers
+  adminController.getAllConsumres
 );
 
 adminRouter.patch(
@@ -30,6 +30,13 @@ adminRouter.patch(
   isAuthenticatedUser,
   hasRole(["admin"]),
   adminController.updateUserStatus
+);
+
+adminRouter.get(
+  "/get/vendors",
+  isAuthenticatedUser,
+  hasRole(["admin"]),
+  adminController.getAllVendors
 );
 
 module.exports = adminRouter;
