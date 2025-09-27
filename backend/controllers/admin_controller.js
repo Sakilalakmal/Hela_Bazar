@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const VendorApplication = require("../model/vendor_application_form");
 const User = require("../model/user_model");
 const Order = require("../model/order_model");
+const Product = require("../model/product_model");
 
 const adminController = {
   vendorApproved: asyncHandler(async (req, res) => {
@@ -174,6 +175,34 @@ const adminController = {
           error:error.message,
         });
       }
+  }),
+
+  //* product management
+  //! 1.get all products
+  //! 2. delete product if there are any issues
+
+  getAllProducts:asyncHandler(async(req,res)=>{
+    try {
+      // getting all product from product collections
+      const products = await Product.find();
+      if(!products){
+        res.status(400).json({
+          message:"There aren't any products to show .."
+        });
+      }
+
+      //if there are product in product collection send it
+      res.status(200).json({
+        message:"Here The Our All Products",
+        productCount:products.length,
+        products,
+      });
+    } catch (error) {
+      res.status(400).json({
+        message:"Something Wrong here",
+        error:error.message,
+      });
+    }
   }),
 };
 
