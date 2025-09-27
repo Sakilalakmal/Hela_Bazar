@@ -62,4 +62,11 @@ adminRouter.get(
   adminController.getAllProducts
 );
 
+adminRouter.delete(
+  "/product/delete/:productId",
+  isAuthenticatedUser,
+  hasRole(["admin"]),
+  adminController.deleteSpecificProduct
+);
+
 module.exports = adminRouter;
