@@ -69,4 +69,13 @@ adminRouter.delete(
   adminController.deleteSpecificProduct
 );
 
+//* reviews management
+
+adminRouter.get(
+  "/get/all/reviews",
+  isAuthenticatedUser,
+  hasRole(["admin"]),
+  adminController.getAllReviews
+);
+
 module.exports = adminRouter;
