@@ -3,6 +3,8 @@ const asyncHandler = require("express-async-handler");
 const User = require("../model/user_model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const sendEmail = require("../utils/sendEmail");
+const Otp = require("../model/otp_model");
 
 const userController = {
   registerUser: asyncHandler(async (req, res) => {
@@ -91,17 +93,16 @@ const userController = {
       let expiresAt = Date.now() + 30 * 1000; // OTP valid for 30 seconds
 
       // Remove any old OTPs for this email
-      await OTPSchema.deleteMany({ email });
+      await Otp.deleteMany({ email });
 
       // Save new OTP to database
-      await OTPSchema.create({ email, otp, expiresAt });
+      await Otp.create({ email, otp, expiresAt });
 
       // Send OTP via email
-      await sendEmail({
-        to: email,
-        subject: "Your OTP Code",
-        text: `Your OTP for Hela Bazar login is: <b>${otp}</b><br>This OTP is valid for 30 seconds.`,
-      });
+      await sendEmail(
+        email,
+        `Your OTP for Hela Bazar login is: <b>${otp}</b><br>This OTP is valid for 30 seconds.`
+      );
 
       res
         .status(200)
