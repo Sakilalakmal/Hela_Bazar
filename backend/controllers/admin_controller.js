@@ -152,55 +152,82 @@ const adminController = {
     }
   }),
 
-  getSpecificOrderDetails: asyncHandler(async(req,res)=>{
-      try {
-        const {orderId} = req.params;
+  getSpecificOrderDetails: asyncHandler(async (req, res) => {
+    try {
+      const { orderId } = req.params;
 
-        //? check if orderId exists in order collection
-        const order = await Order.findById(orderId);
-        if(!order){
-          res.status(400).json({
-            message:"This order didn't exist in orders try again"
-          });
-        }
-
-        //? if it is exists send that specific order details to frontend
-        res.status(200).json({
-          message:"Here the Order details ...",
-          order,
-        });
-      } catch (error) {
+      //? check if orderId exists in order collection
+      const order = await Order.findById(orderId);
+      if (!order) {
         res.status(400).json({
-          message:"something Wrong here",
-          error:error.message,
+          message: "This order didn't exist in orders try again",
         });
       }
+
+      //? if it is exists send that specific order details to frontend
+      res.status(200).json({
+        message: "Here the Order details ...",
+        order,
+      });
+    } catch (error) {
+      res.status(400).json({
+        message: "something Wrong here",
+        error: error.message,
+      });
+    }
   }),
 
   //* product management
   //! 1.get all products
   //! 2. delete product if there are any issues
 
-  getAllProducts:asyncHandler(async(req,res)=>{
+  getAllProducts: asyncHandler(async (req, res) => {
     try {
       // getting all product from product collections
       const products = await Product.find();
-      if(!products){
+      if (!products) {
         res.status(400).json({
-          message:"There aren't any products to show .."
+          message: "There aren't any products to show ..",
         });
       }
 
       //if there are product in product collection send it
       res.status(200).json({
-        message:"Here The Our All Products",
-        productCount:products.length,
+        message: "Here The Our All Products",
+        productCount: products.length,
         products,
       });
     } catch (error) {
       res.status(400).json({
-        message:"Something Wrong here",
-        error:error.message,
+        message: "Something Wrong here",
+        error: error.message,
+      });
+    }
+  }),
+
+  deleteSpecificProduct: asyncHandler(async (req, res) => {
+    try {
+      const { productId } = req.params;
+
+      //first check this specific product exists in collection
+      const product = await Product.findById(productId);
+
+      if (!product) {
+        res.status(400).json({
+          message: "This product didn't exists in anymore...",
+        });
+      }
+
+      await product.deleteOne({productId});
+      product.save();
+
+      res.status(200).json({
+        message: "Product deleted succesfully",
+      });
+    } catch (error) {
+      res.status(400).json({
+        message: "something wrong",
+        error: error.message,
       });
     }
   }),
