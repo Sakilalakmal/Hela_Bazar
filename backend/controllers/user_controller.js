@@ -74,18 +74,47 @@ const userController = {
 
   otpSend: asyncHandler(async (req, res) => {
     try {
+      const { email } = req.body;
+
+      if (!email) {
+        return res.status(400).json({ message: "Email is required" });
+      }
+
+      //check user exists
+      const userExists = await User.findOne({ email });
+      if (!userExists) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      //generate otp
+      let otp = generateOTP();
+      let expiresAt = Date.now() + 30 * 1000; // OTP valid for 30 seconds
+
+      // Remove any old OTPs for this email
+      await OTPSchema.deleteMany({ email });
+
+      // Save new OTP to database
+      await OTPSchema.create({ email, otp, expiresAt });
+
+      // Send OTP via email
+      await sendEmail({
+        to: email,
+        subject: "Your OTP Code",
+        text: `Your OTP for Hela Bazar login is: <b>${otp}</b><br>This OTP is valid for 30 seconds.`,
+      });
+
+      res
+        .status(200)
+        .json({ message: "OTP sent successfully check your inbox " });
     } catch (error) {
       res.status(500).json({ message: "otp send error", error: error.message });
     }
   }),
-
-
 };
+
 // Generate a random 6-digit OTP
 function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
-
-
 
 module.exports = userController;
