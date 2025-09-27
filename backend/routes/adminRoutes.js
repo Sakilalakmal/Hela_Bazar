@@ -39,4 +39,12 @@ adminRouter.get(
   adminController.getAllVendors
 );
 
+//* order management Routes
+adminRouter.get(
+  "/get/all/orders",
+  isAuthenticatedUser,
+  hasRole(["admin"]),
+  adminController.getAllOrders
+);
+
 module.exports = adminRouter;
