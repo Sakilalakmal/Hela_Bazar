@@ -11,4 +11,11 @@ adminRouter.post(
   adminController.vendorApproved
 );
 
+adminRouter.post(
+  "/reject/vendor/:applicationId",
+  isAuthenticatedUser,
+  hasRole(["admin"]),
+  adminController.vendorRejected
+);
+
 module.exports = adminRouter;
