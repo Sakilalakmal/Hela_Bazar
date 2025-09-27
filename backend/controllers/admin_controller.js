@@ -46,7 +46,7 @@ const adminController = {
 
   getAllUsers: asyncHandler(async (req, res) => {
     try {
-      const allUsers = await User.find();
+      const allUsers = await User.find({role: "consumer"}).select("-password");
       if (!allUsers) {
         res.status(400).json({
           message: "There isn't any users ...",
