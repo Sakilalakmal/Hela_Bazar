@@ -35,7 +35,7 @@ const adminController = {
 
       application.status = "rejected";
       await application.save();
-
+      
       res
         .status(200)
         .json({ message: "Vendor application rejected", application });
