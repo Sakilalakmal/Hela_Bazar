@@ -35,12 +35,33 @@ const adminController = {
 
       application.status = "rejected";
       await application.save();
-      
+
       res
         .status(200)
         .json({ message: "Vendor application rejected", application });
     } catch (error) {
       res.status(500).json({ message: "Server Error", error: error.message });
+    }
+  }),
+
+  getAllUsers: asyncHandler(async (req, res) => {
+    try {
+      const allUsers = await User.find();
+      if (!allUsers) {
+        res.status(400).json({
+          message: "There isn't any users ...",
+        });
+      }
+
+      res.status(201).json({
+        message: "Fetch All users successfully",
+        allUsers,
+      });
+    } catch (error) {
+      res.status(400).json({
+        message: "something wrong here",
+        error: error.message,
+      });
     }
   }),
 };
