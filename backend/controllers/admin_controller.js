@@ -125,33 +125,31 @@ const adminController = {
   }),
 
   //*order management
-  //! 1 . get all orders 
+  //! 1 . get all orders
   //! 2 . see specific order details
 
-  getAllOrders : asyncHandler(async(req,res)=>{
+  getAllOrders: asyncHandler(async (req, res) => {
     try {
-
       const allOrders = await Order.find();
 
-      if(!allOrders){
+      if (!allOrders) {
         res.status(400).json({
-          message:"There isn't any order yet"
+          message: "There isn't any order yet",
         });
       }
-      
+
       res.status(200).json({
-        message:" Got All Orders We have",
-        orderCount:allOrders.length,
+        message: " Got All Orders We have",
+        orderCount: allOrders.length,
         allOrders,
       });
     } catch (error) {
-        res.status(400).json({
-          message:"Something wrong here",
-          error: error.message,
-        });     
+      res.status(400).json({
+        message: "Something wrong here",
+        error: error.message,
+      });
     }
   }),
-  
 };
 
 module.exports = adminController;
