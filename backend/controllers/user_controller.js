@@ -124,6 +124,90 @@ const userController = {
       res.status(500).json({ message: "otp send error", error: error.message });
     }
   }),
+
+  changeEmail: asyncHandler(async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const { newEmail } = req.body;
+
+      if (!newEmail) {
+        return res.status(400).json({ message: "New email is required" });
+      }
+
+      const emailExists = await User.findOne({ email: newEmail });
+      if (emailExists) {
+        return res.status(400).json({ message: "Email already in use" });
+      }
+
+      let otp = generateOTP();
+      let expiresAt = new Date(Date.now() + 60 * 1000); // OTP valid for 1 minute
+
+      // Remove any old OTPs for this email
+      await Otp.deleteMany({ email: newEmail });
+
+      // Save new OTP to database
+      await Otp.create({ email: newEmail, otp, expiresAt });
+
+      // Send OTP via email
+      await sendEmail(
+        newEmail,
+        `Your OTP to change email in Hela Bazar is: <b>${otp}</b><br>This OTP is valid for 1 minute.`,
+        "OTP to Change Email"
+      );
+
+      res
+        .status(200)
+        .json({ message: "OTP sent to new email, please verify to change." });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ message: "email change error", error: error.message });
+    }
+  }),
+
+  confirmChangeEmail: asyncHandler(async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const { newEmail, otp } = req.body;
+
+      if (!newEmail || !otp) {
+        return res
+          .status(400)
+          .json({ message: "New email and OTP are required" });
+      }
+
+      const otpRecord = await Otp.findOne({ email: newEmail });
+
+      if (
+        !otpRecord ||
+        otpRecord.otp !== otp ||
+        otpRecord.expiresAt < Date.now()
+      ) {
+        return res.status(400).json({ message: "Invalid or expired OTP" });
+      }
+
+      //check this current user exists
+      const user = await User.findById(userId);
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Update user's email
+
+      user.email = newEmail;
+      await user.save();
+
+      // Delete used OTPs
+      await Otp.deleteMany({ email: newEmail });
+
+      res.status(200).json({ message: "Email updated successfully" });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ message: "confirm email change error", error: error.message });
+    }
+  }),
 };
 
 // Generate a random 6-digit OTP
