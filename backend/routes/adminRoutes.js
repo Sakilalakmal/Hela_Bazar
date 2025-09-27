@@ -47,4 +47,11 @@ adminRouter.get(
   adminController.getAllOrders
 );
 
+adminRouter.get(
+  "/get/one/:orderId",
+  isAuthenticatedUser,
+  hasRole(["admin"]),
+  adminController.getSpecificOrderDetails
+);
+
 module.exports = adminRouter;
