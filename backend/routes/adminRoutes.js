@@ -18,4 +18,11 @@ adminRouter.post(
   adminController.vendorRejected
 );
 
+adminRouter.get(
+  "/get/all/vendors",
+  isAuthenticatedUser,
+  hasRole(["admin"]),
+  adminController.getAllUsers
+);
+
 module.exports = adminRouter;
