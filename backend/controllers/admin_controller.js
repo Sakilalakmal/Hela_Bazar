@@ -53,7 +53,7 @@ const adminController = {
         });
       }
 
-      res.status(201).json({
+      res.status(200).json({
         message: "Fetch All users successfully",
         allUsers,
       });
