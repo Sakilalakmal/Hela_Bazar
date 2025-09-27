@@ -44,9 +44,11 @@ const adminController = {
     }
   }),
 
-  getAllUsers: asyncHandler(async (req, res) => {
+  getAllConsumres: asyncHandler(async (req, res) => {
     try {
-      const allUsers = await User.find({role: "consumer"}).select("-password");
+      const allUsers = await User.find({ role: "consumer" }).select(
+        "-password"
+      );
       if (!allUsers) {
         res.status(400).json({
           message: "There isn't any users ...",
@@ -61,6 +63,29 @@ const adminController = {
       res.status(400).json({
         message: "something wrong here",
         error: error.message,
+      });
+    }
+  }),
+
+  getAllVendors: asyncHandler(async (req, res) => {
+    try {
+      const allVendors = await User.find({ role: "vendor" }).select(
+        "-password"
+      );
+
+      if (!allVendors) {
+        res.status(400).json({
+          message: "There aren't any vendors yet coming soon ...",
+        });
+      }
+
+      res.status(200).json({
+        message: "Vendors fetch succesfully",
+        allVendors,
+      });
+    } catch (error) {
+      res.status(400).json({
+        message: error.message,
       });
     }
   }),
