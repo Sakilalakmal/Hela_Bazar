@@ -19,7 +19,7 @@ adminRouter.post(
 );
 
 adminRouter.get(
-  "/get/all/vendors",
+  "/get/consumers",
   isAuthenticatedUser,
   hasRole(["admin"]),
   adminController.getAllUsers
