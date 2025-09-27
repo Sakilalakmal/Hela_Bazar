@@ -54,4 +54,12 @@ adminRouter.get(
   adminController.getSpecificOrderDetails
 );
 
+//* products managements
+adminRouter.get(
+  "/get/all/products",
+  isAuthenticatedUser,
+  hasRole(["admin"]),
+  adminController.getAllProducts
+);
+
 module.exports = adminRouter;
