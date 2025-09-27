@@ -26,6 +26,12 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+
+    active:{
+      type:String,
+      enum:['active','inactive','banned'],
+      default:'active',
+    }
   },
   {
     timestamps: true,
