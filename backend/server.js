@@ -7,6 +7,7 @@ const productRouter = require("./routes/productRouter");
 const orderManagementRouter = require("./routes/orderManagementRouter");
 const reviewRouter = require("./routes/reviewRouter");
 const wishListRouter = require("./routes/wishListRouter");
+const adminRouter = require("./routes/adminRoutes");
 dotenv.config();
 
 //PORT
@@ -29,6 +30,9 @@ app.use("/products", productRouter);
 app.use("/orders", orderManagementRouter);
 app.use("/reviews", reviewRouter);
 app.use("/wishlist", wishListRouter);
+
+//admin routes
+app.use('/admin', adminRouter);
 
 //server start
 app.listen(PORT, () => {
