@@ -150,6 +150,31 @@ const adminController = {
       });
     }
   }),
+
+  getSpecificOrderDetails: asyncHandler(async(req,res)=>{
+      try {
+        const {orderId} = req.params;
+
+        //? check if orderId exists in order collection
+        const order = await Order.findById(orderId);
+        if(!order){
+          res.status(400).json({
+            message:"This order didn't exist in orders try again"
+          });
+        }
+
+        //? if it is exists send that specific order details to frontend
+        res.status(200).json({
+          message:"Here the Order details ...",
+          order,
+        });
+      } catch (error) {
+        res.status(400).json({
+          message:"something Wrong here",
+          error:error.message,
+        });
+      }
+  }),
 };
 
 module.exports = adminController;
