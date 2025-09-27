@@ -68,18 +68,10 @@ const vendorController = {
 
       await newApplication.save();
 
-      //update user role to vendor
-      await User.findByIdAndUpdate(userId, { role: "vendor" });
-
-      //status update to completed
-      await VendorApplication.findOneAndUpdate(
-        { userId },
-        { status: "completed" }
-      );
 
       res.status(201).json({
         message:
-          "Vendor application submitted successfully you are now a vendor",
+          "Vendor application submitted successfully waiting for admin approval",
         application: newApplication,
       });
     } catch (error) {
