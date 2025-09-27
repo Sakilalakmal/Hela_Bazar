@@ -25,4 +25,11 @@ adminRouter.get(
   adminController.getAllUsers
 );
 
+adminRouter.patch(
+  "/update/status/:userId",
+  isAuthenticatedUser,
+  hasRole(["admin"]),
+  adminController.updateUserStatus
+);
+
 module.exports = adminRouter;
