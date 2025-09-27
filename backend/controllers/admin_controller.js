@@ -66,36 +66,36 @@ const adminController = {
   }),
 
   updateUserStatus: asyncHandler(async (req, res) => {
-try {
-    const { userId } = req.params;
-    const { active } = req.body; // This should be "active"
+    try {
+      const { userId } = req.params;
+      const { active } = req.body; // This should be "active"
 
-    if (!["active", "inactive", "banned"].includes(active)) {
-      return res.status(400).json({
-        message: "Enter valid status",
+      if (!["active", "inactive", "banned"].includes(active)) {
+        return res.status(400).json({
+          message: "Enter valid status",
+        });
+      }
+
+      // Find user by ID
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({
+          message: "This user doesn't exist in system",
+        });
+      }
+
+      user.active = active;
+      await user.save();
+
+      res.status(200).json({
+        message: "Status updated successfully",
+        user,
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: error.message,
       });
     }
-
-    // Find user by ID
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({
-        message: "This user doesn't exist in system",
-      });
-    }
-
-    user.active = active; 
-    await user.save();
-
-    res.status(200).json({
-      message: "Status updated successfully",
-      user,
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
   }),
 };
 
