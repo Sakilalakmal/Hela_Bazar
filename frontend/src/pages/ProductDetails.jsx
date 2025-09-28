@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchSingleProduct } from "../services/productService";
+import { fetchReviewForSelectedproduct } from "../services/productService";
 
 function ProductDetails() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
+  const [reviews,setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [reviewLoading , setReviewLoading] = useState(true);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
@@ -17,6 +20,15 @@ function ProductDetails() {
       })
       .catch(() => setLoading(false));
   }, [id]);
+
+  useEffect(()=>{
+    fetchReviewForSelectedproduct(id).then((data)=>{
+      setReviews(data.reviews || []);
+      setReviewLoading(false);
+    }).catch(()=>{
+      setReviewLoading(false);
+    });
+  },[id]);
 
   // Render star rating (reused from ProductCard)
   const renderStars = (rating) => {
@@ -324,6 +336,60 @@ function ProductDetails() {
               </div>
             </div>
           </div>
+          
+
+{/* Review Section - Fix this part */}
+<div className="border-t border-gray-200 p-8">
+  <h2 className="text-2xl font-bold text-gray-900 mb-6">Customer Reviews</h2>
+  {reviewLoading ? (
+    <div className="flex items-center justify-center py-8">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mr-3"></div>
+      <p className="text-gray-600">Loading reviews...</p>
+    </div>
+  ) : reviews.length === 0 ? (
+    <div className="text-center py-8">
+      <p className="text-gray-500 text-lg">No reviews yet.</p>
+      <p className="text-gray-400 text-sm mt-2">Be the first to review this product!</p>
+    </div>
+  ) : (
+    <div className="space-y-6">
+      {reviews.map((review) => (
+        <div key={review._id} className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                <span className="text-white font-semibold text-sm">
+                  {review.userId?.username?.charAt(0).toUpperCase() || 'U'}
+                </span>
+              </div>
+              <div>
+                <p className="font-semibold text-gray-900">
+                  {review.userId?.username || 'Anonymous User'}
+                </p>
+                <div className="flex items-center gap-1">
+                  {renderStars(review.rating)}
+                  <span className="text-sm text-gray-600 ml-2">
+                    {review.rating}/5
+                  </span>
+                </div>
+              </div>
+            </div>
+            {review.createdAt && (
+              <span className="text-sm text-gray-500">
+                {new Date(review.createdAt).toLocaleDateString()}
+              </span>
+            )}
+          </div>
+          <p className="text-gray-700 leading-relaxed">
+            {review.reviewText || 'No review text provided.'}
+          </p>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
+
+
         </div>
       </div>
     </div>
