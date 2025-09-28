@@ -13,11 +13,12 @@ function ProductCard({ product }) {
     stock,
     rating = 0,
     reviewCount = 0,
-    images = []
+    images = [],
   } = product;
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const discountedPrice = discount > 0 ? price - (price * discount / 100) : price;
+  const discountedPrice =
+    discount > 0 ? price - (price * discount) / 100 : price;
   const hasDiscount = discount > 0;
 
   // Render star rating
@@ -29,15 +30,21 @@ function ProductCard({ product }) {
     for (let i = 0; i < 5; i++) {
       if (i < fullStars) {
         stars.push(
-          <span key={i} className="text-yellow-400 text-sm">★</span>
+          <span key={i} className="text-yellow-400 text-sm">
+            ★
+          </span>
         );
       } else if (i === fullStars && hasHalfStar) {
         stars.push(
-          <span key={i} className="text-yellow-300 text-sm">★</span>
+          <span key={i} className="text-yellow-300 text-sm">
+            ★
+          </span>
         );
       } else {
         stars.push(
-          <span key={i} className="text-gray-300 text-sm">☆</span>
+          <span key={i} className="text-gray-300 text-sm">
+            ☆
+          </span>
         );
       }
     }
@@ -46,11 +53,13 @@ function ProductCard({ product }) {
 
   const handleImageNavigation = (direction) => {
     if (images.length <= 1) return;
-    
-    if (direction === 'next') {
+
+    if (direction === "next") {
       setCurrentImageIndex((prev) => (prev + 1) % images.length);
     } else {
-      setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+      setCurrentImageIndex(
+        (prev) => (prev - 1 + images.length) % images.length
+      );
     }
   };
 
@@ -60,31 +69,35 @@ function ProductCard({ product }) {
       <div className="relative overflow-hidden bg-gray-50 h-72">
         <Link to={`/products/${_id}`}>
           <img
-            src={images?.[currentImageIndex] || "https://via.placeholder.com/400x320?text=No+Image"}
+            src={
+              images?.[currentImageIndex] ||
+              "https://via.placeholder.com/400x320?text=No+Image"
+            }
             alt={name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             onError={(e) => {
-              e.target.src = "https://via.placeholder.com/400x320?text=No+Image";
+              e.target.src =
+                "https://via.placeholder.com/400x320?text=No+Image";
             }}
           />
         </Link>
-        
+
         {/* Image Navigation */}
         {images.length > 1 && (
           <>
-            <button 
-              onClick={() => handleImageNavigation('prev')}
+            <button
+              onClick={() => handleImageNavigation("prev")}
               className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-1 shadow-md transition-all duration-200 opacity-0 group-hover:opacity-100"
             >
               <span className="text-gray-600 text-sm">‹</span>
             </button>
-            <button 
-              onClick={() => handleImageNavigation('next')}
+            <button
+              onClick={() => handleImageNavigation("next")}
               className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-1 shadow-md transition-all duration-200 opacity-0 group-hover:opacity-100"
             >
               <span className="text-gray-600 text-sm">›</span>
             </button>
-            
+
             {/* Image Indicators */}
             <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex space-x-1">
               {images.map((_, index) => (
@@ -92,14 +105,16 @@ function ProductCard({ product }) {
                   key={index}
                   onClick={() => setCurrentImageIndex(index)}
                   className={`w-2 h-2 rounded-full transition-all duration-200 ${
-                    index === currentImageIndex ? 'bg-white' : 'bg-white bg-opacity-50'
+                    index === currentImageIndex
+                      ? "bg-white"
+                      : "bg-white bg-opacity-50"
                   }`}
                 />
               ))}
             </div>
           </>
         )}
-        
+
         {/* Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-2">
           {hasDiscount && (
@@ -148,16 +163,12 @@ function ProductCard({ product }) {
 
         {/* Rating */}
         <div className="flex items-center gap-2 mb-4">
-          <div className="flex items-center">
-            {renderStars()}
-          </div>
+          <div className="flex items-center">{renderStars()}</div>
           <span className="text-sm font-medium text-gray-700">
             {rating > 0 ? rating.toFixed(1) : "0.0"}
           </span>
           {reviewCount > 0 && (
-            <span className="text-xs text-gray-500">
-              ({reviewCount})
-            </span>
+            <span className="text-xs text-gray-500">({reviewCount})</span>
           )}
         </div>
 
@@ -183,11 +194,11 @@ function ProductCard({ product }) {
 
         {/* Action Buttons */}
         <div className="flex gap-2">
-          <button 
+          <button
             className={`flex-1 py-2.5 px-4 rounded-lg font-medium text-sm transition-all duration-200 ${
-              stock > 0 
-                ? 'bg-blue-600 text-white hover:bg-blue-700' 
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              stock > 0
+                ? "bg-blue-600 text-white hover:bg-blue-700"
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
             }`}
             disabled={stock === 0}
             onClick={(e) => {
@@ -195,10 +206,10 @@ function ProductCard({ product }) {
               console.log(`Added product ${_id} to cart`);
             }}
           >
-            {stock > 0 ? 'Add to Cart' : 'Sold Out'}
+            {stock > 0 ? "Add to Cart" : "Sold Out"}
           </button>
-          
-          <button 
+
+          <button
             className="px-3 py-2.5 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors duration-200"
             onClick={(e) => {
               e.preventDefault();
