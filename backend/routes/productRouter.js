@@ -15,7 +15,6 @@ productRouter.post(
 
 productRouter.get(
   "/all/products",
-  isAuthenticatedUser,
   productController.getAllProducts
 );
 
