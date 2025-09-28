@@ -95,6 +95,7 @@ const productController = {
     res.status(201).json({
       message: "All products fetched successfully",
       products,
+      productCount: products.length,
     });
   }),
 
