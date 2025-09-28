@@ -233,6 +233,7 @@ const OrderManagementController = {
     res.status(200).json({
       message: "All your orders fetched successfully",
       orders,
+      orderCount: orders.length,
     });
   }),
 
