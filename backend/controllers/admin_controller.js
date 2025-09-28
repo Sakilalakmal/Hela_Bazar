@@ -61,7 +61,7 @@ const adminController = {
       res.status(200).json({
         message: "Fetch All users successfully",
         allUsers,
-        userCount: allUsers.length,
+        consumerCount: allUsers.length,
       });
     } catch (error) {
       res.status(400).json({
@@ -86,6 +86,7 @@ const adminController = {
       res.status(200).json({
         message: "Vendors fetch succesfully",
         allVendors,
+        vendorCount: allVendors.length,
       });
     } catch (error) {
       res.status(400).json({
