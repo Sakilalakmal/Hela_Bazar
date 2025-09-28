@@ -20,7 +20,6 @@ productRouter.get(
 
 productRouter.get(
   "/details/:productId",
-  isAuthenticatedUser,
   productController.getSingleproduct
 );
 
