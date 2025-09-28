@@ -11,3 +11,10 @@ export async function fetchSingleProduct(productId) {
   if (!res.ok) throw new Error("Failed to fetch product");
   return res.json();
 }
+
+export async function fetchReviewForSelectedproduct(productId) {
+  const res = await fetch(`${API_URL}/reviews/product/:productId`);
+  if(!res.ok) throw new  Error("Failed to fetch Reviews");
+  return res.json();
+  
+}
