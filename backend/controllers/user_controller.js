@@ -103,7 +103,7 @@ const userController = {
 
       //generate otp
       let otp = generateOTP();
-      let expiresAt = new Date(Date.now() + 30 * 1000); // OTP valid for 30 seconds
+      let expiresAt = new Date(Date.now() + 600 * 1000); // OTP valid for 10 minutes
 
       // Remove any old OTPs for this email
       await Otp.deleteMany({ email });
