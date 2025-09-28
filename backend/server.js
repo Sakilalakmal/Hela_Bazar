@@ -9,6 +9,7 @@ const reviewRouter = require("./routes/reviewRouter");
 const wishListRouter = require("./routes/wishListRouter");
 const adminRouter = require("./routes/adminRoutes");
 dotenv.config();
+const cors = require("cors");
 
 //PORT
 const PORT = process.env.PORT || 3000;
@@ -23,6 +24,15 @@ connectDB();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+//fornt end connection
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Replace with your frontend URL
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    credentials: true, // If you need to send cookies or authentication headers
+  })
+);
+
 //routes
 app.use("/", userRouter);
 app.use("/", vendorRouter);
@@ -32,7 +42,7 @@ app.use("/reviews", reviewRouter);
 app.use("/wishlist", wishListRouter);
 
 //admin routes
-app.use('/admin', adminRouter);
+app.use("/admin", adminRouter);
 
 //server start
 app.listen(PORT, () => {
