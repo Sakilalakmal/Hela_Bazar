@@ -61,6 +61,7 @@ const adminController = {
       res.status(200).json({
         message: "Fetch All users successfully",
         allUsers,
+        userCount: allUsers.length,
       });
     } catch (error) {
       res.status(400).json({
