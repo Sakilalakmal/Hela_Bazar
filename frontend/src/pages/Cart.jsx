@@ -2,6 +2,7 @@ import { useAuth } from "../context/AuthContext";
 import { useEffect, useState } from "react";
 import { getCart } from "../services/cartService";
 import { removeFromCart ,clearCart} from "../services/cartService";
+import toast from "react-hot-toast";
 
 function Cart() {
   const { token } = useAuth();
@@ -11,7 +12,7 @@ function Cart() {
 
   useEffect(() => {
     if (!token) {
-      setMsg("Please login to view your cart.");
+      toast.error("Please login to view your cart.");
       setLoading(false);
       return;
     }
@@ -34,9 +35,11 @@ const handleRemoveFromCart = async (productId) => {
     setCart({
       ...cart,
       items: cart.items.filter((item) => String(item.productId) !== String(productId)),
+      
     });
+    toast.success("Item removed from cart.");
   } catch (err) {
-    setMsg(err.message);
+    toast.error(err.message);
   }
 };
 
@@ -45,7 +48,7 @@ const handleClearCart = async () => {
   try {
     await clearCart(token);
     setCart({ ...cart, items: [] });
-    setMsg("All items removed from cart.");
+    toast.success("All items removed from cart.");
   } catch (err) {
     setMsg(err.message);
   }
