@@ -8,6 +8,7 @@ import Wishlist from "./pages/Wishlist";
 import Orders from "./pages/Orders";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import RequestOtp from "./pages/requestOtp";
 
 function App() {
   return (
@@ -20,8 +21,9 @@ function App() {
           <Route path="cart" element={<Cart />} />
           <Route path="wishlist" element={<Wishlist />} />
           <Route path="orders" element={<Orders />} />
-          <Route path="login" element={<Login />} />
+          <Route path="login" element={<RequestOtp />} />
           <Route path="register" element={<Register />} />
+          
         </Route>
       </Routes>
     </BrowserRouter>
