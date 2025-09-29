@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { sendOtp,loginUser } from "../services/authService";
+import { sendOtp, loginUser } from "../services/authService";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 function AuthPage() {
-
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const { login } = useAuth();
   const [step, setStep] = useState("otp"); // 'otp' or 'login'
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
@@ -27,10 +28,14 @@ function AuthPage() {
     e.preventDefault();
     try {
       const data = await loginUser({ email, otp });
-      // Store token in localStorage
-      localStorage.setItem("token", data.token);
+
+
+      const {token , ...user} = data;
+      login(user, token);
+
       setMessage("Login successful!");
       navigate("/"); // redirect to home or dashboard
+       // use context to set user and token
     } catch (err) {
       setMessage(err.message);
     }
@@ -44,7 +49,7 @@ function AuthPage() {
           <input
             type="email"
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
             className="w-full px-3 py-2 border rounded"
             placeholder="Enter your email"
             required
@@ -65,7 +70,7 @@ function AuthPage() {
           <input
             type="text"
             value={otp}
-            onChange={e => setOtp(e.target.value)}
+            onChange={(e) => setOtp(e.target.value)}
             className="w-full px-3 py-2 border rounded"
             placeholder="Enter OTP"
             required
