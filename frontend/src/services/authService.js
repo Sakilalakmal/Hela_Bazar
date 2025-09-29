@@ -17,7 +17,7 @@ export async function registerUser(userData) {
 //!request to OTP for login
 // send OTP to email
 export async function sendOtp(email) {
-  const res = await fetch(`${API_URL}/request/otp`, {
+  const res = await fetch(`${API_KEY}/request/otp`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email }),
