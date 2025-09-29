@@ -23,18 +23,19 @@ const wishListController = {
         });
       }
 
-      //check if the current user is the owner of this wishlist
-      if (String(wishList.userId) !== String(userId)) {
-        return res.status(403).json({
-          message:
-            "You are not authorized to add products to this wishlist",
-        });
-      }
 
       //create wishlist if currenrt user doesn't have one
       let wishList = await Wishlist.findOne({ userId });
       if (!wishList) {
         wishList = new Wishlist({ userId, products: [] });
+      }
+
+            //check if the current user is the owner of this wishlist
+      if (String(wishList.userId) !== String(userId)) {
+        return res.status(403).json({
+          message:
+            "You are not authorized to add products to this wishlist",
+        });
       }
 
       //check product already in wishlist

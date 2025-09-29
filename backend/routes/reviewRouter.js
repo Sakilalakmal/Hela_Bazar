@@ -5,11 +5,7 @@ const reviewRouter = express.Router();
 
 reviewRouter.post("/add", isAuthenticatedUser, reviewsController.createReview);
 
-reviewRouter.get(
-  "/product/:productId",
-  isAuthenticatedUser,
-  reviewsController.getReviewsForProduct
-);
+reviewRouter.get("/product/:productId", reviewsController.getReviewsForProduct);
 
 reviewRouter.patch(
   "/update/:reviewId",
