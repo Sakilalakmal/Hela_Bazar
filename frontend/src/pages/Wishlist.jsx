@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import {useAuth} from "../context/authContext";
-import { getWishlist , removeFromWishlist } from "../services/wishlistService";
+import { getWishlist , removeFromWishlist ,clearWishlist} from "../services/wishlistService";
 import {Link} from "react-router-dom";
 function Wishlist() {
   const { token } = useAuth();
@@ -37,6 +37,14 @@ function Wishlist() {
   }
   }
 
+  const clearWishlistAll = async () => {
+    try {
+      await clearWishlist(token);
+      setWishlist({ products: [] });
+    } catch (err) {
+      setMsg(err.message);
+    }
+  };
 
   if (loading) return <p className="text-center py-10">Loading wishlist...</p>;
   if (msg) return <p className="text-center text-red-500 py-10">{msg}</p>;
@@ -45,6 +53,8 @@ function Wishlist() {
 
   return (
     <div className="max-w-4xl mx-auto py-8 px-4">
+
+      <button onClick={clearWishlistAll}>Remove All</button>
       <h1 className="text-2xl font-bold mb-6">My Wishlist</h1>
 
           
