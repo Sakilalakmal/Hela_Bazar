@@ -1,7 +1,7 @@
 const API_KEY = import.meta.env.VITE_API_KEY || "http://localhost:3000";
 
 export async function registerUser(userData) {
-  const res = await fetch(`${API_URL}/user/register`, {
+  const res = await fetch(`${API_KEY}/user/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(userData),
