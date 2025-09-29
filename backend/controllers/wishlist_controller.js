@@ -17,12 +17,11 @@ const wishListController = {
       }
 
       //check if the current user is the owner of this wishlist
-      if(String(product.vendorId) === String(userId)){
+      if (String(product.vendorId) === String(userId)) {
         return res.status(403).json({
           message: "You cannot add your own product to wishlist",
         });
       }
-
 
       //create wishlist if currenrt user doesn't have one
       let wishList = await Wishlist.findOne({ userId });
@@ -30,11 +29,10 @@ const wishListController = {
         wishList = new Wishlist({ userId, products: [] });
       }
 
-            //check if the current user is the owner of this wishlist
+      //check if the current user is the owner of this wishlist
       if (String(wishList.userId) !== String(userId)) {
         return res.status(403).json({
-          message:
-            "You are not authorized to add products to this wishlist",
+          message: "You are not authorized to add products to this wishlist",
         });
       }
 
@@ -56,6 +54,34 @@ const wishListController = {
     } catch (error) {
       return res.status(500).json({
         message: "Internal server error",
+      });
+    }
+  }),
+
+  getAllWishListProducts: asyncHandler(async (req, res) => {
+    try {
+      const userId = req.user.id;
+
+      //check wishlist exist for current user
+      const wishList = await Wishlist.findOne({ userId }).populate(
+        "products",
+        "name brand price description images"
+      );
+
+      if (!wishList) {
+        return res.status(404).json({
+          message: "Wishlist not found",
+        });
+      }
+
+      return res.status(200).json({
+        message: "Wishlist retrieved successfully",
+        wishList,
+      });
+    } catch (error) {
+      res.status(400).json({
+        message: "Internal server error",
+        error: error.message,
       });
     }
   }),
