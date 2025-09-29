@@ -30,3 +30,19 @@ export async function sendOtp(email) {
 
   return res.json(); // { message: "OTP sent successfully..." }
 }
+
+//! after send otp login
+export async function loginUser({ email, otp }) {
+  const res = await fetch(`${API_KEY}/user/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, otp }),
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.message || "Login failed");
+  }
+
+  return res.json(); // includes token!
+}
