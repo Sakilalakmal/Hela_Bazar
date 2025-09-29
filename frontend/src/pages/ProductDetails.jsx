@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchSingleProduct } from "../services/productService";
 import { fetchReviewForSelectedproduct } from "../services/productService";
-import { useAuth } from "../context/authContext";
+import { useAuth } from "../context/AuthContext";
 import { addToWishlist } from "../services/wishlistService";
 
 function ProductDetails() {

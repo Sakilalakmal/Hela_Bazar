@@ -1,5 +1,5 @@
 import sriLankaVideo from "../assets/videos/Sri_Lanka_Promotional_Video_Creation.mp4";
-
+import promo from '../assets/videos/promo.mp4';
 function Home() {
   return (
     <div className="min-h-screen">
@@ -7,26 +7,20 @@ function Home() {
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         {/* Background Video */}
         <div className="absolute inset-0 z-0">
-          {/* 
-            TODO: Add your Sri Lanka video here
-            Replace the src with your video file path
-            Example: src="/videos/sri-lanka-beautiful.mp4"
-            Recommended: Use a short (30-60 seconds) high-quality video of Sri Lankan landscapes, culture, or landmarks
-          */}
-          <video
-            className="w-full h-full object-cover"
-            autoPlay
-            muted
-            loop
-            playsInline
-          >
-            <source src="/videos/sri-lanka-intro.mp4" type="video/mp4" />
-            {/* Fallback background image if video doesn't load */}
-            Your browser does not support the video tag.
-          </video>
+
+                <video
+                  className="w-full h-full object-cover"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                >
+                  <source src={promo} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
 
           {/* Video Overlay for better text readability */}
-          <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+         
         </div>
 
         {/* Hero Content */}

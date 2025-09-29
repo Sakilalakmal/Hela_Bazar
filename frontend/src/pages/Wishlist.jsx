@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import {useAuth} from "../context/authContext";
+import { useAuth } from "../context/AuthContext";
 import { getWishlist , removeFromWishlist ,clearWishlist} from "../services/wishlistService";
 import {Link} from "react-router-dom";
 
