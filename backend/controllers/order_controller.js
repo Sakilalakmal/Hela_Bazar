@@ -58,6 +58,36 @@ const OrderManagementController = {
     });
   }),
 
+  getAllCartForUser: asyncHandler(async (req, res) => {
+    try {
+      const userId = req.user.id;
+
+      const cart = await Cart.findOne({ userId });
+
+      if (!cart) {
+        return res.status(404).json({
+          message: "Cart not found",
+        });
+      }
+
+      if (String(cart.userId) !== String(userId)) {
+        return res.status(403).json({
+          message: "You are not authorized to view this cart",
+        });
+      }
+
+      res.status(200).json({
+        message: "Cart retrieved successfully",
+        cart,
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: "Server error",
+        error: error.message,
+      });
+    }
+  }),
+
   deleteFromCart: asyncHandler(async (req, res) => {
     const userId = req.user.id;
     const { productId } = req.params;
