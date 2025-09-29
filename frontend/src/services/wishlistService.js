@@ -43,3 +43,17 @@ export async function removeFromWishlist(productId, token) {
     );
   return res.json();
 }
+
+//! remove all wishlists items
+export async function clearWishlist(token) {
+  const res = await fetch(`${API_URL}/wishlist/removeAll`, {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+    },
+  });
+  if (!res.ok)
+    throw new Error((await res.json()).message || "Failed to clear wishlist");
+  return res.json();
+}
