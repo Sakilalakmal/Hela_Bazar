@@ -9,6 +9,12 @@ wishListRouter.post(
   wishListController.addProductToWishList
 );
 
+wishListRouter.get(
+  "/all/items",
+  isAuthenticatedUser,
+  wishListController.getAllWishListProducts
+);
+
 wishListRouter.post(
   "/remove/:productId",
   isAuthenticatedUser,
