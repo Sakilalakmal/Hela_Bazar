@@ -13,3 +13,20 @@ export async function registerUser(userData) {
 
   return res.json(); // returns { _id, username, email, role }
 }
+
+//!request to OTP for login
+// send OTP to email
+export async function sendOtp(email) {
+  const res = await fetch(`${API_URL}/request/otp`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.message || "Failed to send OTP");
+  }
+
+  return res.json(); // { message: "OTP sent successfully..." }
+}
