@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { registerUser } from "../services/authService";
+import toast from "react-hot-toast";
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -21,9 +22,9 @@ function Register() {
 
     try {
       const data = await registerUser(formData);
-      setMessage(`User ${data.username} registered successfully!`);
+      toast.success(`User ${data.username} registered successfully!`);
     } catch (err) {
-      setMessage(err.message);
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }

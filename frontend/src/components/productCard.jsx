@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { addToWishlist } from "../services/wishlistService";
+import toast from "react-hot-toast";
 
 function ProductCard({ product }) {
   const {
@@ -20,19 +21,18 @@ function ProductCard({ product }) {
 
   const { token } = useAuth();
 
-  const [wishMsg, setWishMsg] = useState("");
 
   const handleWishListAdd = async () => {
     if (!token) {
-      setWishMsg("Please login to add to wishlist");
+      toast.error("Please login to add to wishlist");
       return;
     }
 
     try {
       const data = await addToWishlist(_id, token);
-      setWishMsg(data.message || "Added to wishlist!");
+      toast.success(data.message || "Added to wishlist!");
     } catch (error) {
-      setWishMsg(err.message || "Error adding to wishlist.");
+      toast.error(error.message || "Error adding to wishlist.");
     }
   };
 

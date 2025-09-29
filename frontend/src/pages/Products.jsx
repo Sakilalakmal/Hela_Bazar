@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchProducts } from "../services/productService";
 import ProductCard from "../components/ProductCard";
+import toast from "react-hot-toast";
 
 function Products() {
   const [products, setProducts] = useState([]);
@@ -12,9 +13,10 @@ function Products() {
       .then((data) => {
         setProducts(data.products); // from backend
         setLoading(false);
+        
       })
       .catch((err) => {
-        setError(err.message);
+        toast.error(err.message);
         setLoading(false);
       });
   }, []);

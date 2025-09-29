@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { getWishlist , removeFromWishlist ,clearWishlist} from "../services/wishlistService";
 import {Link} from "react-router-dom";
+import toast from "react-hot-toast";
 
 function Wishlist() {
   const { token } = useAuth();
@@ -11,7 +12,7 @@ function Wishlist() {
 
   useEffect(() => {
     if (!token) {
-      setMsg("Please log in to view your wishlist.");
+      toast.error("Please log in to view your wishlist.");
       setLoading(false);
       return;
     }
@@ -21,7 +22,7 @@ function Wishlist() {
         setLoading(false);
       })
       .catch(err => {
-        setMsg(err.message);
+        toast.error(err.message);
         setLoading(false);
       });
   }, [token]);
@@ -32,7 +33,7 @@ function Wishlist() {
     // Option 1: re-fetch wishlist
     const data = await getWishlist(token);
     setWishlist(data.wishList);
-
+    toast.success("Item removed from wishlist.");
   } catch (err) {
     setMsg(err.message);
   }
@@ -42,6 +43,7 @@ function Wishlist() {
     try {
       await clearWishlist(token);
       setWishlist({ products: [] });
+      toast.success("Wishlist cleared successfully now you can add new products...");
     } catch (err) {
       setMsg(err.message);
     }

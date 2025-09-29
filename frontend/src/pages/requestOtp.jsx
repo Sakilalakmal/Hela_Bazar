@@ -2,6 +2,7 @@ import { useState } from "react";
 import { sendOtp, loginUser } from "../services/authService";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import toast from "react-hot-toast";
 
 function AuthPage() {
   const navigate = useNavigate();
@@ -16,10 +17,10 @@ function AuthPage() {
     e.preventDefault();
     try {
       await sendOtp(email);
-      setMessage("OTP sent! Please check your email.");
+      toast.success("OTP sent! Please check your email.");
       setStep("login"); // move to login form
     } catch (err) {
-      setMessage(err.message);
+      toast.error(err.message);
     }
   };
 
@@ -33,11 +34,11 @@ function AuthPage() {
       const {token , ...user} = data;
       login(user, token);
 
-      setMessage("Login successful!");
+      toast.success("Login successful!");
       navigate("/"); // redirect to home or dashboard
        // use context to set user and token
     } catch (err) {
-      setMessage(err.message);
+      toast.error(err.message);
     }
   };
 
