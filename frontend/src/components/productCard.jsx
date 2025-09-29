@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import { addToWishlist } from "../services/wishlistService";
 
 function ProductCard({ product }) {
   const {
@@ -15,6 +17,24 @@ function ProductCard({ product }) {
     reviewCount = 0,
     images = [],
   } = product;
+
+  const { token } = useAuth();
+
+  const [wishMsg, setWishMsg] = useState("");
+
+  const handleWishListAdd = async () => {
+    if (!token) {
+      setWishMsg("Please login to add to wishlist");
+      return;
+    }
+
+    try {
+      const data = await addToWishlist(_id, token);
+      setWishMsg(data.message || "Added to wishlist!");
+    } catch (error) {
+      setWishMsg(err.message || "Error adding to wishlist.");
+    }
+  };
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const discountedPrice =
@@ -211,10 +231,7 @@ function ProductCard({ product }) {
 
           <button
             className="px-3 py-2.5 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors duration-200"
-            onClick={(e) => {
-              e.preventDefault();
-              console.log(`Added product ${_id} to wishlist`);
-            }}
+            onClick={handleWishListAdd}
           >
             <span className="text-base">♡</span>
           </button>
