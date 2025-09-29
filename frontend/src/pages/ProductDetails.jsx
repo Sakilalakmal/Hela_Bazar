@@ -4,6 +4,7 @@ import { fetchSingleProduct } from "../services/productService";
 import { fetchReviewForSelectedproduct } from "../services/productService";
 import { useAuth } from "../context/AuthContext";
 import { addToWishlist } from "../services/wishlistService";
+import { addToCart } from "../services/cartService";
 
 function ProductDetails() {
   const { id } = useParams();
@@ -15,6 +16,8 @@ function ProductDetails() {
   const [quantity, setQuantity] = useState(1);
   const { user, token } = useAuth();
   const [wishMsg, setWishMsg] = useState("");
+  const [customization, setCustomization] = useState("");
+  const [cartMsg, setCartMsg] = useState("");
 
   useEffect(() => {
     fetchSingleProduct(id)
@@ -36,6 +39,8 @@ function ProductDetails() {
       });
   }, [id]);
 
+  //! add to wishlist
+
   const addWishList = async () => {
     if (!token) {
       setWishMsg("You need to be logged in to add to wishlist");
@@ -47,6 +52,23 @@ function ProductDetails() {
       setWishMsg(data.message || "Added to wishlist");
     } catch (error) {
       setWishMsg("Error adding to wishlist. Please try again.");
+    }
+  };
+
+  //! add to cart
+  const addTocartHandle = async () => {
+    if (!token) {
+      setCartMsg("You need to be logged in to add to cart");
+    }
+
+    try {
+      const data = await addToCart(product._id, quantity, customization, token);
+      setCartMsg(
+        data.message ||
+          `${product.name} added to cart now you can order it anytime...`
+      );
+    } catch (error) {
+      setCartMsg("Error adding to cart. Please try again");
     }
   };
 
@@ -298,9 +320,28 @@ function ProductDetails() {
                 </div>
               </div>
 
+              <div className="my-6">
+                <label
+                  htmlFor="customization"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Customization (optional)
+                </label>
+                <textarea
+                  id="customization"
+                  name="customization"
+                  rows={3}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+                  placeholder="Describe any custom requests for this product (e.g., gift wrapping, engraving, special instructions)"
+                  value={customization}
+                  onChange={(e) => setCustomization(e.target.value)}
+                />
+              </div>
+
               {/* Action Buttons */}
               <div className="space-y-3">
                 <button
+                onClick={addTocartHandle}
                   className={`w-full py-3 px-6 rounded-lg font-semibold text-lg transition-all ${
                     stock > 0
                       ? "bg-yellow-400 hover:bg-yellow-500 text-gray-900"
