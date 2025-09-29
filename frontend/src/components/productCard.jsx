@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { addToWishlist } from "../services/wishlistService";
 import toast from "react-hot-toast";
+import { addToCart } from "../services/cartService";
 
 function ProductCard({ product }) {
   const {
@@ -22,6 +23,7 @@ function ProductCard({ product }) {
   const { token } = useAuth();
 
 
+  //! handle wishlist add
   const handleWishListAdd = async () => {
     if (!token) {
       toast.error("Please login to add to wishlist");
@@ -35,6 +37,22 @@ function ProductCard({ product }) {
       toast.error(error.message || "Error adding to wishlist.");
     }
   };
+
+
+  //! adding to cart
+  const handleAddToCart = async()=>{
+    if(!token){
+      toast.error("Please login to add to cart");
+      return;
+    }
+
+    try {
+      const data = await addToCart(_id, 1, {}, token);
+      toast.success(data.message || "Added to cart!");
+    } catch (error) {
+      toast.error(error.message || "Error adding to cart.");
+    }
+  }
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const discountedPrice =
@@ -221,10 +239,7 @@ function ProductCard({ product }) {
                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
             }`}
             disabled={stock === 0}
-            onClick={(e) => {
-              e.preventDefault();
-              console.log(`Added product ${_id} to cart`);
-            }}
+            onClick={handleAddToCart}
           >
             {stock > 0 ? "Add to Cart" : "Sold Out"}
           </button>
