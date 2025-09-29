@@ -1,6 +1,7 @@
 import { useAuth } from "../context/AuthContext";
 import { useEffect, useState } from "react";
 import { getCart } from "../services/cartService";
+import { removeFromCart ,clearCart} from "../services/cartService";
 
 function Cart() {
   const { token } = useAuth();
@@ -25,6 +26,31 @@ function Cart() {
       });
   }, [token]);
 
+  //! remove one cart from list
+  // Handler to remove a single item
+const handleRemoveFromCart = async (productId) => {
+  try {
+    await removeFromCart(productId, token);
+    setCart({
+      ...cart,
+      items: cart.items.filter((item) => String(item.productId) !== String(productId)),
+    });
+  } catch (err) {
+    setMsg(err.message);
+  }
+};
+
+// Handler to remove all items
+const handleClearCart = async () => {
+  try {
+    await clearCart(token);
+    setCart({ ...cart, items: [] });
+    setMsg("All items removed from cart.");
+  } catch (err) {
+    setMsg(err.message);
+  }
+};
+
   if (loading)
     return <p className="text-center py-10 text-lg">Loading your cart...</p>;
   if (msg) return <p className="text-center text-red-500 py-10">{msg}</p>;
@@ -40,7 +66,7 @@ function Cart() {
         <h1 className="text-3xl font-bold">My Cart</h1>
         <button
           className="bg-red-100 text-red-600 px-4 py-2 rounded-lg hover:bg-red-200 font-semibold"
-          // onClick={handleClearCart}
+          onClick={handleClearCart}
         >
           Remove All
         </button>
@@ -81,7 +107,7 @@ function Cart() {
               </button>
               <button
                 className="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600"
-                // onClick={() => handleRemoveFromCart(item._id)}
+                onClick={() => handleRemoveFromCart(item.productId)}
               >
                 Delete
               </button>
