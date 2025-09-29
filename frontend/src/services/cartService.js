@@ -18,3 +18,16 @@ export async function addToCart(
     throw new Error((await res.json()).message || "Failed to add to cart");
   return res.json();
 }
+
+//!get all cart items
+export async function getCart(token) {
+  const res = await fetch(`${API_URL}/orders/all/cart`, {
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+    },
+  });
+  if (!res.ok)
+    throw new Error((await res.json()).message || "Failed to get cart");
+  return res.json(); // { message, cart }
+}
