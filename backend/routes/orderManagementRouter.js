@@ -10,6 +10,12 @@ orderManagementRouter.post(
   OrderManagementController.addTocart
 );
 
+orderManagementRouter.get(
+  "/all/cart",
+  isAuthenticatedUser,
+  OrderManagementController.getAllCartForUser
+);
+
 orderManagementRouter.delete(
   "/cart/remove/:productId",
   isAuthenticatedUser,
