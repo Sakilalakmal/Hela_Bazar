@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { getVendorProfile } from "../services/vendorService";
 import toast from "react-hot-toast";
+import EditVendorModal from "../components/EditVendorModal";
 
 function Profile() {
   const { token } = useAuth();
@@ -9,9 +10,11 @@ function Profile() {
   const [vendor, setVendor] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
 
-  useEffect(() => {
-    if (!token) return;
+  // Reload handler for after edit
+  const reloadProfile = () => {
+    setLoading(true);
     getVendorProfile(token)
       .then((data) => {
         setProfile(data.user);
@@ -22,6 +25,12 @@ function Profile() {
         toast.error(err.message || "Could not load profile");
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    if (!token) return;
+    reloadProfile();
+    // eslint-disable-next-line
   }, [token]);
 
   if (loading) {
@@ -92,14 +101,14 @@ function Profile() {
                   {profile.role}
                 </p>
               </div>
-
-              
+              {vendor && (
                 <button
-                  
                   className="bg-black text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors duration-200"
+                  onClick={() => setShowEditModal(true)}
                 >
                   Edit Business
                 </button>
+              )}
             </div>
           </div>
 
@@ -149,7 +158,6 @@ function Profile() {
                 >
                   {vendor.status}
                 </span>
-
               </div>
             </div>
 
@@ -471,6 +479,17 @@ function Profile() {
               </button>
             </div>
           </div>
+        )}
+
+        {/* Edit Modal */}
+        {showEditModal && vendor && (
+          <EditVendorModal
+            vendor={vendor}
+            open={showEditModal}
+            onClose={() => setShowEditModal(false)}
+            onUpdated={reloadProfile}
+            token={token}
+          />
         )}
       </div>
     </div>
