@@ -15,6 +15,13 @@ vendorRouter.post(
   vendorController.createVendorApplication
 );
 
+//! get user profile details
+vendorRouter.get(
+  "/vendor/profile/details",
+  isAuthenticatedUser,
+  vendorController.getVendorProfileDetailsFromApplication
+);
+
 vendorRouter.put(
   "/vendor/update",
   isAuthenticatedUser,
