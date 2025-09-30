@@ -111,7 +111,7 @@ const vendorController = {
 
       res.status(200).json({
         message: "Vendor profile details fetched successfully",
-        vendorProfile,
+        vendorProfile : vendorApplication,
         user,
       });
     } catch (error) {
