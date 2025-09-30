@@ -1,5 +1,4 @@
 import sriLankaVideo from "../assets/videos/Sri_Lanka_Promotional_Video_Creation.mp4";
-import promo from '../assets/videos/promo.mp4';
 import hero from "../assets/videos/hero.mp4";
 
 function Home() {
