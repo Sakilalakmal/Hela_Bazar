@@ -62,6 +62,17 @@ function Header() {
             >
               Orders
             </Link>
+
+            
+        
+          {user && user.role === "consumer" && (
+            <button
+              onClick={() => navigate("/become-vendor")}
+              className="px-6 py-3 text-base font-medium text-gray-700 hover:text-blue-600 transition-colors duration-200 rounded-xl hover:bg-blue-50"
+            >
+              Become a part of Hela Bazar
+            </button>
+          )}
           </nav>
 
           {/* Auth Section */}
@@ -170,15 +181,6 @@ function Header() {
           </Link>
         </div>
 
-        
-          {user && user.role === "consumer" && (
-            <button
-              onClick={() => navigate("/become-vendor")}
-              className="px-6 py-3 text-base font-medium text-gray-700 hover:text-blue-600 transition-colors duration-200 rounded-xl hover:bg-blue-50"
-            >
-              Become a part of Hela Bazar
-            </button>
-          )}
        
       </div>
     </header>
