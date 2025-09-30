@@ -1,4 +1,4 @@
-import { Link , useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 function Header() {
@@ -12,7 +12,6 @@ function Header() {
     <header className="bg-white border-b border-slate-200 sticky top-0 z-50 backdrop-blur-md bg-white/95 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          
           {/* Logo Section */}
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-3 group">
@@ -78,6 +77,7 @@ function Header() {
             {user ? (
               <div className="flex items-center space-x-4">
                 {/* User Info */}
+
                 <div className="hidden sm:flex items-center space-x-3">
                   <div className="text-right">
                     <p className="text-sm font-medium text-slate-600">
@@ -89,11 +89,14 @@ function Header() {
                   </div>
 
                   {/* User Avatar */}
-                  <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center shadow-md">
+                  <Link
+                    to={"/profile"}
+                    className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center shadow-md"
+                  >
                     <span className="text-white font-semibold text-sm">
                       {user.username?.charAt(0).toUpperCase()}
                     </span>
-                  </div>
+                  </Link>
                 </div>
 
                 {/* Logout Button */}

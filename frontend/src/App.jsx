@@ -10,6 +10,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import RequestOtp from "./pages/requestOtp";
 import VendorApplicationForm from "./pages/VendorApplicationForm";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -25,7 +26,7 @@ function App() {
           <Route path="login" element={<RequestOtp />} />
           <Route path="register" element={<Register />} />
           <Route path="become-vendor" element={<VendorApplicationForm />} />
-          
+          <Route path="profile" element={<Profile />} />
         </Route>
       </Routes>
     </BrowserRouter>
