@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { getMyOrders, getOrderDetails } from "../services/orderService";
+import { getMyOrders, getOrderDetails, cancelOrder } from "../services/orderService";
 import toast from "react-hot-toast";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 function Orders() {
   const { token } = useAuth();
@@ -10,11 +11,16 @@ function Orders() {
   const [loading, setLoading] = useState(true);
   const [msg, setMsg] = useState("");
 
-  // State for order details modal
+  // Modal State
   const [showModal, setShowModal] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [detailsLoading, setDetailsLoading] = useState(false);
   const [orderDetails, setOrderDetails] = useState(null);
+
+  // Confirm Dialog State
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [pendingCancelOrderId, setPendingCancelOrderId] = useState(null);
+  const [cancelFromModal, setCancelFromModal] = useState(false);
 
   useEffect(() => {
     if (!token) {
@@ -28,7 +34,6 @@ function Orders() {
         setOrders(data.orders);
         setOrderCount(data.orderCount || data.orders.length);
         setLoading(false);
-        // toast.success("Orders loaded!");
       })
       .catch((err) => {
         setMsg(err.message);
@@ -47,11 +52,65 @@ function Orders() {
       const data = await getOrderDetails(orderId, token);
       setOrderDetails(data.order);
       setDetailsLoading(false);
-      // toast.success("Order details loaded!");
     } catch (err) {
       setOrderDetails(null);
       setDetailsLoading(false);
       toast.error(err.message || "Could not get order details");
+    }
+  };
+
+  // Custom dialog flow
+  const startCancelOrder = (orderId, fromModal = false) => {
+    setPendingCancelOrderId(orderId);
+    setCancelFromModal(fromModal);
+    setConfirmOpen(true);
+  };
+
+  const confirmCancelOrder = async () => {
+    setConfirmOpen(false);
+    if (!pendingCancelOrderId) return;
+    await doCancelOrder(pendingCancelOrderId, cancelFromModal);
+    setPendingCancelOrderId(null);
+    setCancelFromModal(false);
+  };
+
+  const cancelDialog = () => {
+    setConfirmOpen(false);
+    setPendingCancelOrderId(null);
+    setCancelFromModal(false);
+  };
+
+  // The actual cancel logic (moved out to be called from dialog)
+  const doCancelOrder = async (orderId, fromModal = false) => {
+    try {
+      await cancelOrder(orderId, token);
+      toast.success("Order cancelled successfully!");
+      // Refetch all orders for UI update
+      setLoading(true);
+      getMyOrders(token)
+        .then((data) => {
+          setOrders(data.orders);
+          setOrderCount(data.orderCount || data.orders.length);
+          setLoading(false);
+        })
+        .catch((err) => {
+          setMsg(err.message);
+          setLoading(false);
+        });
+
+      // If in modal, refetch details
+      if (fromModal && orderId === selectedOrderId) {
+        setDetailsLoading(true);
+        try {
+          const data = await getOrderDetails(orderId, token);
+          setOrderDetails(data.order);
+        } catch {
+          setOrderDetails(null);
+        }
+        setDetailsLoading(false);
+      }
+    } catch (err) {
+      toast.error(err.message);
     }
   };
 
@@ -73,6 +132,10 @@ function Orders() {
         return "bg-gray-100 text-gray-700";
     }
   };
+
+  // Util: Can this order be cancelled?
+  const isCancellable = (order) =>
+    order.status !== "cancelled" && order.status !== "delivered";
 
   if (loading)
     return <p className="text-center py-10 text-lg">Loading your orders...</p>;
@@ -141,12 +204,22 @@ function Orders() {
                   {order.shippingAddress.country}
                 </p>
               </div>
-              <button
-                className="text-blue-600 font-semibold text-sm hover:underline"
-                onClick={() => handleShowDetails(order._id)}
-              >
-                Show Details
-              </button>
+              <div className="flex gap-4 items-center">
+                <button
+                  className="text-blue-600 font-semibold text-sm hover:underline"
+                  onClick={() => handleShowDetails(order._id)}
+                >
+                  Show Details
+                </button>
+                {isCancellable(order) && (
+                  <button
+                    className="text-red-600 font-semibold text-sm hover:underline"
+                    onClick={() => startCancelOrder(order._id, false)}
+                  >
+                    Cancel Order
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         ))}
@@ -255,6 +328,14 @@ function Orders() {
                     {orderDetails.notes}
                   </div>
                 )}
+                {isCancellable(orderDetails) && (
+                  <button
+                    className="w-full mt-4 bg-red-600 text-white py-2 rounded hover:bg-red-700 font-semibold"
+                    onClick={() => startCancelOrder(orderDetails._id, true)}
+                  >
+                    Cancel This Order
+                  </button>
+                )}
               </>
             ) : (
               <div className="text-center py-8 text-red-500">
@@ -264,6 +345,15 @@ function Orders() {
           </div>
         </div>
       )}
+
+      {/* ConfirmDialog for cancel */}
+      <ConfirmDialog
+        open={confirmOpen}
+        title="Cancel this order?"
+        message="Are you sure you want to cancel this order? This cannot be undone."
+        onConfirm={confirmCancelOrder}
+        onCancel={cancelDialog}
+      />
     </div>
   );
 }
