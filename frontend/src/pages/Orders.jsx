@@ -28,7 +28,7 @@ function Orders() {
         setOrders(data.orders);
         setOrderCount(data.orderCount || data.orders.length);
         setLoading(false);
-        toast.success("Orders loaded!");
+        // toast.success("Orders loaded!");
       })
       .catch((err) => {
         setMsg(err.message);
@@ -47,11 +47,11 @@ function Orders() {
       const data = await getOrderDetails(orderId, token);
       setOrderDetails(data.order);
       setDetailsLoading(false);
-      toast.success("Order details loaded!");
+      // toast.success("Order details loaded!");
     } catch (err) {
       setOrderDetails(null);
       setDetailsLoading(false);
-      toast.error(err.message || "Could not fetch order details");
+      toast.error(err.message || "Could not get order details");
     }
   };
 
@@ -75,11 +75,8 @@ function Orders() {
   };
 
   if (loading)
-    return (
-      <p className="text-center py-10 text-lg">Loading your orders...</p>
-    );
-  if (msg)
-    return <p className="text-center text-red-500 py-10">{msg}</p>;
+    return <p className="text-center py-10 text-lg">Loading your orders...</p>;
+  if (msg) return <p className="text-center text-red-500 py-10">{msg}</p>;
   if (!orders.length)
     return (
       <p className="text-center text-gray-600 py-10">
@@ -111,8 +108,7 @@ function Orders() {
                     order.status
                   )}`}
                 >
-                  {order.status.charAt(0).toUpperCase() +
-                    order.status.slice(1)}
+                  {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                 </span>
                 <span className="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-600">
                   {order.paymentMethod?.toUpperCase() || "COD"}
