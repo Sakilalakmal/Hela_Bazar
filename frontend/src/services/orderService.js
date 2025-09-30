@@ -15,3 +15,20 @@ export const getMyOrders = async (token) => {
     throw error;
   }
 };
+
+//! get details about one selected order
+export const getOrderDetails = async (orderId, token) => {
+  try {
+    const response = await fetch(`${API_URL}/orders/detials/${orderId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) throw new Error("Failed to fetch order details");
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
+};
