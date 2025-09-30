@@ -82,7 +82,8 @@ function VendorApplicationForm() {
   };
 
   // Add/remove product sample rows
-  const addSample = () => setProductSamples([...productSamples, { ...blankProduct }]);
+  const addSample = () =>
+    setProductSamples([...productSamples, { ...blankProduct }]);
   const removeSample = (idx) =>
     setProductSamples((samples) =>
       samples.length > 1 ? samples.filter((_, i) => i !== idx) : samples
@@ -113,10 +114,13 @@ function VendorApplicationForm() {
           form.certifications.split(",").map((s) => s.trim())
         );
       if (form.preferredShippingMethods)
-        data.set(
-          "preferredShippingMethods",
-          form.preferredShippingMethods.split(",").map((s) => s.trim())
-        );
+        form.preferredShippingMethods.split(",").forEach((s) => {
+          if (s.trim()) data.append("preferredShippingMethods", s.trim());
+        });
+      if (form.socialMediaLinks)
+        form.socialMediaLinks.split(",").forEach((s) => {
+          if (s.trim()) data.append("socialMediaLinks", s.trim());
+        });
 
       // Shop images
       shopImages.forEach((file) => data.append("shopImages", file));
@@ -185,7 +189,6 @@ function VendorApplicationForm() {
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-4xl mx-auto">
-        
         {/* Header */}
         <div className="text-center mb-12">
           <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -195,45 +198,60 @@ function VendorApplicationForm() {
             Become a Vendor
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Join Hela Bazar and start selling your amazing products to customers worldwide
+            Join Hela Bazar and start selling your amazing products to customers
+            worldwide
           </p>
         </div>
 
         {/* Form Container */}
         <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
-          
           {/* Progress Bar */}
           <div className="bg-blue-50 px-8 py-6 border-b border-gray-200">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-blue-600 font-medium">Application Form</span>
-              <span className="text-gray-500">Complete all required fields</span>
+              <span className="text-blue-600 font-medium">
+                Application Form
+              </span>
+              <span className="text-gray-500">
+                Complete all required fields
+              </span>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="p-8 space-y-12" encType="multipart/form-data">
-            
+          <form
+            onSubmit={handleSubmit}
+            className="p-8 space-y-12"
+            encType="multipart/form-data"
+          >
             {/* Business Information */}
             <section className="space-y-6">
               <div className="flex items-center space-x-3 mb-6">
                 <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
                   <span className="text-blue-600 text-sm">🏢</span>
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900">Business Information</h2>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Business Information
+                </h2>
               </div>
-              
+
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700">Business Name</label>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Business Name
+                  </label>
                   <input
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
                     placeholder="Enter your business name"
                     value={form.businessName}
-                    onChange={(e) => updateField("businessName", e.target.value)}
+                    onChange={(e) =>
+                      updateField("businessName", e.target.value)
+                    }
                   />
                 </div>
-                
+
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700">Business Category</label>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Business Category
+                  </label>
                   <input
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
                     placeholder="e.g. Clothing, Electronics, Art"
@@ -241,9 +259,11 @@ function VendorApplicationForm() {
                     onChange={(e) => updateField("category", e.target.value)}
                   />
                 </div>
-                
+
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700">Tax ID</label>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Tax ID
+                  </label>
                   <input
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
                     placeholder="Enter your tax identification number"
@@ -251,46 +271,62 @@ function VendorApplicationForm() {
                     onChange={(e) => updateField("taxId", e.target.value)}
                   />
                 </div>
-                
+
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700">Business Registration Number</label>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Business Registration Number
+                  </label>
                   <input
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
                     placeholder="Enter your business registration number"
                     value={form.businessRegistrationNumber}
-                    onChange={(e) => updateField("businessRegistrationNumber", e.target.value)}
+                    onChange={(e) =>
+                      updateField("businessRegistrationNumber", e.target.value)
+                    }
                   />
                 </div>
-                
+
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700">Certifications</label>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Certifications
+                  </label>
                   <input
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
                     placeholder="ISO 9001, Organic, Fair Trade (comma separated)"
                     value={form.certifications}
-                    onChange={(e) => updateField("certifications", e.target.value)}
+                    onChange={(e) =>
+                      updateField("certifications", e.target.value)
+                    }
                   />
                 </div>
-                
+
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700">Preferred Shipping Methods</label>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Preferred Shipping Methods
+                  </label>
                   <input
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
                     placeholder="DHL, FedEx, UPS (comma separated)"
                     value={form.preferredShippingMethods}
-                    onChange={(e) => updateField("preferredShippingMethods", e.target.value)}
+                    onChange={(e) =>
+                      updateField("preferredShippingMethods", e.target.value)
+                    }
                   />
                 </div>
               </div>
-              
+
               <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-700">Business Description</label>
+                <label className="block text-sm font-semibold text-gray-700">
+                  Business Description
+                </label>
                 <textarea
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400 resize-none"
                   placeholder="Describe your business, products, and what makes you unique"
                   value={form.businessDescription}
                   rows={4}
-                  onChange={(e) => updateField("businessDescription", e.target.value)}
+                  onChange={(e) =>
+                    updateField("businessDescription", e.target.value)
+                  }
                 />
               </div>
             </section>
@@ -301,48 +337,66 @@ function VendorApplicationForm() {
                 <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
                   <span className="text-green-600 text-sm">👤</span>
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900">Contact Person</h2>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Contact Person
+                </h2>
               </div>
-              
+
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700">Full Name</label>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Full Name
+                  </label>
                   <input
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
                     placeholder="Enter contact person's full name"
                     value={form.contactPerson.name}
-                    onChange={(e) => updateContactPerson("name", e.target.value)}
+                    onChange={(e) =>
+                      updateContactPerson("name", e.target.value)
+                    }
                   />
                 </div>
-                
+
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700">Position</label>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Position
+                  </label>
                   <input
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
                     placeholder="CEO, Manager, Owner (optional)"
                     value={form.contactPerson.position}
-                    onChange={(e) => updateContactPerson("position", e.target.value)}
+                    onChange={(e) =>
+                      updateContactPerson("position", e.target.value)
+                    }
                   />
                 </div>
-                
+
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700">Phone Number</label>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Phone Number
+                  </label>
                   <input
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
                     placeholder="+1 (555) 123-4567"
                     value={form.contactPerson.phone}
-                    onChange={(e) => updateContactPerson("phone", e.target.value)}
+                    onChange={(e) =>
+                      updateContactPerson("phone", e.target.value)
+                    }
                   />
                 </div>
-                
+
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700">Email Address</label>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Email Address
+                  </label>
                   <input
                     type="email"
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
                     placeholder="contact@business.com"
                     value={form.contactPerson.email}
-                    onChange={(e) => updateContactPerson("email", e.target.value)}
+                    onChange={(e) =>
+                      updateContactPerson("email", e.target.value)
+                    }
                   />
                 </div>
               </div>
@@ -354,57 +408,79 @@ function VendorApplicationForm() {
                 <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
                   <span className="text-purple-600 text-sm">📍</span>
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900">Business Address</h2>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Business Address
+                </h2>
               </div>
-              
+
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="space-y-2 lg:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700">Street Address</label>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Street Address
+                  </label>
                   <input
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
                     placeholder="123 Business Street, Suite 100"
                     value={form.businessAddress.street}
-                    onChange={(e) => updateBusinessAddress("street", e.target.value)}
+                    onChange={(e) =>
+                      updateBusinessAddress("street", e.target.value)
+                    }
                   />
                 </div>
-                
+
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700">City</label>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    City
+                  </label>
                   <input
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
                     placeholder="Enter city name"
                     value={form.businessAddress.city}
-                    onChange={(e) => updateBusinessAddress("city", e.target.value)}
+                    onChange={(e) =>
+                      updateBusinessAddress("city", e.target.value)
+                    }
                   />
                 </div>
-                
+
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700">State/Province</label>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    State/Province
+                  </label>
                   <input
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
                     placeholder="Enter state or province"
                     value={form.businessAddress.state}
-                    onChange={(e) => updateBusinessAddress("state", e.target.value)}
+                    onChange={(e) =>
+                      updateBusinessAddress("state", e.target.value)
+                    }
                   />
                 </div>
-                
+
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700">Zip/Postal Code</label>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Zip/Postal Code
+                  </label>
                   <input
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
                     placeholder="12345"
                     value={form.businessAddress.zipCode}
-                    onChange={(e) => updateBusinessAddress("zipCode", e.target.value)}
+                    onChange={(e) =>
+                      updateBusinessAddress("zipCode", e.target.value)
+                    }
                   />
                 </div>
-                
+
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700">Country</label>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Country
+                  </label>
                   <input
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
                     placeholder="Enter country name"
                     value={form.businessAddress.country}
-                    onChange={(e) => updateBusinessAddress("country", e.target.value)}
+                    onChange={(e) =>
+                      updateBusinessAddress("country", e.target.value)
+                    }
                   />
                 </div>
               </div>
@@ -416,12 +492,16 @@ function VendorApplicationForm() {
                 <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
                   <span className="text-orange-600 text-sm">🌐</span>
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900">Online Presence</h2>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Online Presence
+                </h2>
               </div>
-              
+
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700">Website URL</label>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Website URL
+                  </label>
                   <input
                     type="url"
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
@@ -430,14 +510,18 @@ function VendorApplicationForm() {
                     onChange={(e) => updateField("website", e.target.value)}
                   />
                 </div>
-                
+
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700">Social Media Links</label>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Social Media Links
+                  </label>
                   <input
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
                     placeholder="Facebook, Instagram, Twitter URLs (comma separated)"
                     value={form.socialMediaLinks}
-                    onChange={(e) => updateField("socialMediaLinks", e.target.value)}
+                    onChange={(e) =>
+                      updateField("socialMediaLinks", e.target.value)
+                    }
                   />
                 </div>
               </div>
@@ -449,12 +533,16 @@ function VendorApplicationForm() {
                 <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
                   <span className="text-yellow-600 text-sm">💳</span>
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900">Store & Payment Information</h2>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Store & Payment Information
+                </h2>
               </div>
-              
+
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700">Store Type</label>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Store Type
+                  </label>
                   <input
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
                     placeholder="Online, Physical, Hybrid"
@@ -462,22 +550,28 @@ function VendorApplicationForm() {
                     onChange={(e) => updateField("storeType", e.target.value)}
                   />
                 </div>
-                
+
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700">Payment Method</label>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Payment Method
+                  </label>
                   <select
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                     value={form.paymentDetails.paymentMethod}
-                    onChange={(e) => updatePayment("paymentMethod", e.target.value)}
+                    onChange={(e) =>
+                      updatePayment("paymentMethod", e.target.value)
+                    }
                   >
                     <option value="bank">Bank Transfer</option>
                     <option value="paypal">PayPal</option>
                     <option value="stripe">Stripe</option>
                   </select>
                 </div>
-                
+
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700">Bank Name</label>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Bank Name
+                  </label>
                   <input
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
                     placeholder="Enter your bank name"
@@ -485,24 +579,32 @@ function VendorApplicationForm() {
                     onChange={(e) => updatePayment("bankName", e.target.value)}
                   />
                 </div>
-                
+
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700">Account Number</label>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Account Number
+                  </label>
                   <input
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
                     placeholder="Enter your account number"
                     value={form.paymentDetails.accountNumber}
-                    onChange={(e) => updatePayment("accountNumber", e.target.value)}
+                    onChange={(e) =>
+                      updatePayment("accountNumber", e.target.value)
+                    }
                   />
                 </div>
-                
+
                 <div className="space-y-2 lg:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700">Routing Number</label>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Routing Number
+                  </label>
                   <input
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
                     placeholder="Enter your routing number"
                     value={form.paymentDetails.routingNumber}
-                    onChange={(e) => updatePayment("routingNumber", e.target.value)}
+                    onChange={(e) =>
+                      updatePayment("routingNumber", e.target.value)
+                    }
                   />
                 </div>
               </div>
@@ -514,12 +616,16 @@ function VendorApplicationForm() {
                 <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
                   <span className="text-indigo-600 text-sm">📸</span>
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900">Shop Images & Logo</h2>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Shop Images & Logo
+                </h2>
               </div>
-              
+
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700">Upload Images</label>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Upload Images
+                  </label>
                   <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 hover:border-blue-400 transition-colors">
                     <input
                       className="w-full"
@@ -529,15 +635,18 @@ function VendorApplicationForm() {
                       onChange={handleShopImages}
                     />
                     <p className="text-sm text-gray-500 mt-2">
-                      Upload your shop logo and interior/exterior photos. Maximum 5MB per file.
+                      Upload your shop logo and interior/exterior photos.
+                      Maximum 5MB per file.
                     </p>
                   </div>
                 </div>
-                
+
                 {/* Shop Images Preview */}
                 {shopImages.length > 0 && (
                   <div className="space-y-4">
-                    <p className="text-sm font-medium text-gray-700">Image Previews:</p>
+                    <p className="text-sm font-medium text-gray-700">
+                      Image Previews:
+                    </p>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                       {Array.from(shopImages).map((file, idx) => (
                         <div key={idx} className="relative group">
@@ -553,11 +662,23 @@ function VendorApplicationForm() {
                             className="absolute -top-2 -right-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg"
                             onClick={() => removeShopImage(idx)}
                           >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M6 18L18 6M6 6l12 12"
+                              />
                             </svg>
                           </button>
-                          <p className="text-xs text-gray-500 mt-2 truncate">{file.name}</p>
+                          <p className="text-xs text-gray-500 mt-2 truncate">
+                            {file.name}
+                          </p>
                         </div>
                       ))}
                     </div>
@@ -572,12 +693,17 @@ function VendorApplicationForm() {
                 <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
                   <span className="text-red-600 text-sm">📦</span>
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900">Sample Products</h2>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Sample Products
+                </h2>
               </div>
-              
+
               <div className="space-y-6">
                 {productSamples.map((ps, idx) => (
-                  <div key={idx} className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+                  <div
+                    key={idx}
+                    className="bg-gray-50 rounded-xl p-6 border border-gray-200"
+                  >
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="text-lg font-semibold text-gray-900">
                         Product Sample {idx + 1}
@@ -592,43 +718,61 @@ function VendorApplicationForm() {
                         </button>
                       )}
                     </div>
-                    
+
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
                       <div className="space-y-2">
-                        <label className="block text-sm font-semibold text-gray-700">Product Title</label>
+                        <label className="block text-sm font-semibold text-gray-700">
+                          Product Title
+                        </label>
                         <input
                           className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
                           placeholder="Enter product name"
                           value={ps.title}
-                          onChange={(e) => handleProductSample(idx, "title", e.target.value)}
+                          onChange={(e) =>
+                            handleProductSample(idx, "title", e.target.value)
+                          }
                         />
                       </div>
-                      
+
                       <div className="space-y-2">
-                        <label className="block text-sm font-semibold text-gray-700">Description</label>
+                        <label className="block text-sm font-semibold text-gray-700">
+                          Description
+                        </label>
                         <input
                           className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
                           placeholder="Brief product description"
                           value={ps.description}
-                          onChange={(e) => handleProductSample(idx, "description", e.target.value)}
+                          onChange={(e) =>
+                            handleProductSample(
+                              idx,
+                              "description",
+                              e.target.value
+                            )
+                          }
                         />
                       </div>
-                      
+
                       <div className="space-y-2">
-                        <label className="block text-sm font-semibold text-gray-700">Product Image</label>
+                        <label className="block text-sm font-semibold text-gray-700">
+                          Product Image
+                        </label>
                         <input
                           type="file"
                           className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                           accept="image/*"
-                          onChange={(e) => handleProductSample(idx, "image", e.target.files[0])}
+                          onChange={(e) =>
+                            handleProductSample(idx, "image", e.target.files[0])
+                          }
                         />
                       </div>
                     </div>
-                    
+
                     {/* Product Image Preview */}
                     {ps.image && (
                       <div className="mt-4">
-                        <p className="text-sm font-medium text-gray-700 mb-2">Image Preview:</p>
+                        <p className="text-sm font-medium text-gray-700 mb-2">
+                          Image Preview:
+                        </p>
                         <div className="relative inline-block">
                           <div className="w-32 h-32 rounded-xl overflow-hidden border-2 border-gray-200 hover:border-blue-400 transition-colors">
                             <img
@@ -642,17 +786,29 @@ function VendorApplicationForm() {
                             className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg"
                             onClick={() => removeProductImage(idx)}
                           >
-                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            <svg
+                              className="w-3 h-3"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M6 18L18 6M6 6l12 12"
+                              />
                             </svg>
                           </button>
                         </div>
-                        <p className="text-xs text-gray-500 mt-1">{ps.image.name}</p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {ps.image.name}
+                        </p>
                       </div>
                     )}
                   </div>
                 ))}
-                
+
                 <button
                   type="button"
                   className="w-full py-3 bg-blue-50 text-blue-600 border border-blue-200 rounded-xl font-medium hover:bg-blue-100 transition-colors"
@@ -676,9 +832,24 @@ function VendorApplicationForm() {
               >
                 {submitting ? (
                   <div className="flex items-center justify-center">
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    <svg
+                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
                     </svg>
                     Submitting Application...
                   </div>
@@ -686,7 +857,7 @@ function VendorApplicationForm() {
                   "Submit Vendor Application"
                 )}
               </button>
-              
+
               <p className="text-center text-gray-500 text-sm mt-4">
                 Your application will be reviewed within 2-3 business days
               </p>
