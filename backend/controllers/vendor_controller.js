@@ -145,6 +145,8 @@ const vendorController = {
       businessRegistrationNumber,
       storeType,
       paymentDetails,
+            socialMediaLinks,
+      preferredShippingMethods,
     } = req.body;
 
     //handle images logics
@@ -179,7 +181,10 @@ const vendorController = {
       paymentDetails || vendorProfile.paymentDetails;
     vendorProfile.shopImages = shopImages; // Updated shop images
     vendorProfile.initialProductList = productImages; // Updated product images
-
+    vendorProfile.socialMediaLinks =
+      socialMediaLinks || vendorProfile.socialMediaLinks;
+    vendorProfile.preferredShippingMethods =
+      preferredShippingMethods || vendorProfile.preferredShippingMethods;
     //save new vendor profile
     await vendorProfile.save();
 
