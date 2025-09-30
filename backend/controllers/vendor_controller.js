@@ -17,7 +17,7 @@ const vendorController = {
       storeType,
       paymentDetails,
       socialMediaLinks,
-      preferredShippingMethods
+      preferredShippingMethods,
     } = req.body;
     const userId = req.user.id;
 
@@ -74,7 +74,6 @@ const vendorController = {
 
       await newApplication.save();
 
-
       res.status(201).json({
         message:
           "Vendor application submitted successfully waiting for admin approval",
@@ -83,6 +82,42 @@ const vendorController = {
     } catch (error) {
       res.status(400).json({
         message: "Error submitting application",
+      });
+    }
+  }),
+
+  getVendorProfileDetailsFromApplication: asyncHandler(async (req, res) => {
+    try {
+      const userId = req.user.id;
+
+      const user = await User.findById(userId).select(
+        "username email role createdAt"
+      );
+      if (!user) {
+        return res.status(404).json({
+          message: "User not found",
+        });
+      }
+
+      //find vendor Application to get vendor id
+      const vendorApplication = await VendorApplication.findOne({
+        userId,
+      }).populate("userId", "username email role");
+      if (!vendorApplication) {
+        return res.status(404).json({
+          message: "Vendor application not found",
+        });
+      }
+
+      res.status(200).json({
+        message: "Vendor profile details fetched successfully",
+        vendorProfile,
+        user,
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: "Error While fetching vendor profile details",
+        error: error.message,
       });
     }
   }),
