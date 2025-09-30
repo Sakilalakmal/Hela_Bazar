@@ -278,21 +278,21 @@ const OrderManagementController = {
 
     //check order exists
     if (!order) {
-      res.status(404).json({
+      return res.status(404).json({
         message: "This order not found",
       });
     }
 
     if (
-      String(order.customerId._id) !== String(userId) ||
+      String(order.customerId._id) !== String(userId) &&
       req.user.role === "admin"
     ) {
-      res.status(403).json({
+    return  res.status(403).json({
         message: "You are not authorized to view this order details",
       });
     }
 
-    res.status(200).json({
+   return res.status(200).json({
       message: "Order details fetched successfully",
       order,
     });
