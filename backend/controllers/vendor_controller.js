@@ -16,6 +16,8 @@ const vendorController = {
       businessRegistrationNumber,
       storeType,
       paymentDetails,
+      socialMediaLinks,
+      preferredShippingMethods
     } = req.body;
     const userId = req.user.id;
 
@@ -37,7 +39,9 @@ const vendorController = {
       !businessAddress ||
       !businessRegistrationNumber ||
       !storeType ||
-      !paymentDetails
+      !paymentDetails ||
+      !socialMediaLinks ||
+      !preferredShippingMethods
     ) {
       res.status(400);
       throw new Error("Please fill all required fields");
@@ -62,6 +66,8 @@ const vendorController = {
         businessRegistrationNumber,
         storeType,
         paymentDetails,
+        socialMediaLinks,
+        preferredShippingMethods,
         shopImages,
         initialProductList: productImages,
       });
