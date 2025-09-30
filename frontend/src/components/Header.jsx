@@ -1,17 +1,18 @@
-import { Link } from "react-router-dom";
+import { Link , useNavigate} from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
+
 function Header() {
+  const navigate = useNavigate();
   const { user, logout } = useAuth();
 
   console.log("user in header:", user);
-  console.log('user username', user?.username);
-  
+  console.log("user username", user?.username);
+
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50 backdrop-blur-md bg-white/95 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          
           {/* Logo Section */}
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-3 group">
@@ -26,20 +27,20 @@ function Header() {
 
           {/* Navigation Menu */}
           <nav className="hidden lg:flex items-center space-x-2">
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               className="px-6 py-3 rounded-xl text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200"
             >
               Home
             </Link>
-            <Link 
-              to="/products" 
+            <Link
+              to="/products"
               className="px-6 py-3 rounded-xl text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200"
             >
               Products
             </Link>
-            <Link 
-              to="/cart" 
+            <Link
+              to="/cart"
               className="px-6 py-3 rounded-xl text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 relative"
             >
               <span>Cart</span>
@@ -48,15 +49,15 @@ function Header() {
                 0
               </span>
             </Link>
-            <Link 
-              to="/wishlist" 
+            <Link
+              to="/wishlist"
               className="px-6 py-3 rounded-xl text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 relative"
             >
               <span>Wishlist</span>
               <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full opacity-0"></span>
             </Link>
-            <Link 
-              to="/orders" 
+            <Link
+              to="/orders"
               className="px-6 py-3 rounded-xl text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200"
             >
               Orders
@@ -77,7 +78,7 @@ function Header() {
                       {user.username}
                     </p>
                   </div>
-                  
+
                   {/* User Avatar */}
                   <div className="w-12 h-12 bg-gradient-to-tr from-blue-500 to-purple-500 rounded-full flex items-center justify-center shadow-md">
                     <span className="text-white font-semibold text-lg">
@@ -103,7 +104,7 @@ function Header() {
                 >
                   Login
                 </Link>
-                
+
                 {/* Register Button */}
                 <Link
                   to="/register"
@@ -118,8 +119,18 @@ function Header() {
           {/* Mobile Menu Button */}
           <div className="lg:hidden flex items-center">
             <button className="p-3 rounded-xl text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-200">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
               </svg>
             </button>
           </div>
@@ -127,37 +138,48 @@ function Header() {
 
         {/* Mobile Navigation Menu (hidden by default) */}
         <div className="lg:hidden border-t border-gray-100 py-6 space-y-2">
-          <Link 
-            to="/" 
+          <Link
+            to="/"
             className="block px-6 py-3 rounded-xl text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200"
           >
             Home
           </Link>
-          <Link 
-            to="/products" 
+          <Link
+            to="/products"
             className="block px-6 py-3 rounded-xl text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200"
           >
             Products
           </Link>
-          <Link 
-            to="/cart" 
+          <Link
+            to="/cart"
             className="block px-6 py-3 rounded-xl text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200"
           >
             Cart
           </Link>
-          <Link 
-            to="/wishlist" 
+          <Link
+            to="/wishlist"
             className="block px-6 py-3 rounded-xl text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200"
           >
             Wishlist
           </Link>
-          <Link 
-            to="/orders" 
+          <Link
+            to="/orders"
             className="block px-6 py-3 rounded-xl text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200"
           >
             Orders
           </Link>
         </div>
+
+        
+          {user && user.role === "consumer" && (
+            <button
+              onClick={() => navigate("/become-vendor")}
+              className="px-6 py-3 text-base font-medium text-gray-700 hover:text-blue-600 transition-colors duration-200 rounded-xl hover:bg-blue-50"
+            >
+              Become a part of Hela Bazar
+            </button>
+          )}
+       
       </div>
     </header>
   );
