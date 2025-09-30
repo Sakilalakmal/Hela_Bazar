@@ -14,7 +14,13 @@ function VendorApplicationForm() {
     certifications: "",
     businessDescription: "",
     contactPerson: { name: "", position: "", phone: "", email: "" },
-    businessAddress: { street: "", city: "", state: "", zipCode: "", country: "" },
+    businessAddress: {
+      street: "",
+      city: "",
+      state: "",
+      zipCode: "",
+      country: "",
+    },
     website: "",
     socialMediaLinks: "",
     businessRegistrationNumber: "",
@@ -33,8 +39,7 @@ function VendorApplicationForm() {
   const [submitting, setSubmitting] = useState(false);
 
   // Input change helpers
-  const updateField = (key, value) =>
-    setForm((f) => ({ ...f, [key]: value }));
+  const updateField = (key, value) => setForm((f) => ({ ...f, [key]: value }));
 
   const updateContactPerson = (k, v) =>
     setForm((f) => ({
@@ -67,8 +72,9 @@ function VendorApplicationForm() {
   // Add/remove product sample rows
   const addSample = () => setProductSamples([...productSamples, blankProduct]);
   const removeSample = (idx) =>
-    setProductSamples((samples) => samples.length > 1
-      ? samples.filter((_, i) => i !== idx) : samples);
+    setProductSamples((samples) =>
+      samples.length > 1 ? samples.filter((_, i) => i !== idx) : samples
+    );
 
   // Form submit
   const handleSubmit = async (e) => {
@@ -90,9 +96,15 @@ function VendorApplicationForm() {
 
       // Certifications + shipping = comma-separated string
       if (form.certifications)
-        data.set("certifications", form.certifications.split(",").map(s=>s.trim()));
+        data.set(
+          "certifications",
+          form.certifications.split(",").map((s) => s.trim())
+        );
       if (form.preferredShippingMethods)
-        data.set("preferredShippingMethods", form.preferredShippingMethods.split(",").map(s=>s.trim()));
+        data.set(
+          "preferredShippingMethods",
+          form.preferredShippingMethods.split(",").map((s) => s.trim())
+        );
 
       // Shop images
       shopImages.forEach((file) => data.append("shopImages", file));
@@ -106,7 +118,9 @@ function VendorApplicationForm() {
 
       // Submit API call
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/vendor/apply`,
+        `${
+          import.meta.env.VITE_API_URL || "http://localhost:3000"
+        }/vendor/apply`,
         {
           method: "POST",
           headers: {
@@ -119,7 +133,35 @@ function VendorApplicationForm() {
       if (!res.ok) throw new Error(resp.message || "Application failed!");
 
       toast.success("Application submitted! Await admin approval.");
-      // Optionally redirect or block reapply
+      // Reset form fields after successful submission
+      setForm({
+        businessName: "",
+        taxId: "",
+        category: "",
+        certifications: "",
+        businessDescription: "",
+        contactPerson: { name: "", position: "", phone: "", email: "" },
+        businessAddress: {
+          street: "",
+          city: "",
+          state: "",
+          zipCode: "",
+          country: "",
+        },
+        website: "",
+        socialMediaLinks: "",
+        businessRegistrationNumber: "",
+        storeType: "",
+        paymentDetails: {
+          bankName: "",
+          accountNumber: "",
+          routingNumber: "",
+          paymentMethod: "bank",
+        },
+        preferredShippingMethods: "",
+      });
+      setShopImages([]);
+      setProductSamples([blankProduct]);
     } catch (err) {
       toast.error(err.message);
     } finally {
@@ -133,8 +175,11 @@ function VendorApplicationForm() {
       <h1 className="text-3xl font-bold mb-8 text-center text-blue-700">
         Vendor Application
       </h1>
-      <form onSubmit={handleSubmit} className="space-y-7" encType="multipart/form-data">
-
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-7"
+        encType="multipart/form-data"
+      >
         {/* Business Information */}
         <div>
           <h2 className="font-bold text-lg mb-2">Business Information</h2>
@@ -165,7 +210,9 @@ function VendorApplicationForm() {
               className="input"
               placeholder="Business Registration Number"
               value={form.businessRegistrationNumber}
-              onChange={(e) => updateField("businessRegistrationNumber", e.target.value)}
+              onChange={(e) =>
+                updateField("businessRegistrationNumber", e.target.value)
+              }
             />
             <input
               className="input"
@@ -177,7 +224,9 @@ function VendorApplicationForm() {
               className="input"
               placeholder="Preferred Shipping Methods (comma separated)"
               value={form.preferredShippingMethods}
-              onChange={(e) => updateField("preferredShippingMethods", e.target.value)}
+              onChange={(e) =>
+                updateField("preferredShippingMethods", e.target.value)
+              }
             />
           </div>
           <textarea
@@ -195,7 +244,8 @@ function VendorApplicationForm() {
           <h2 className="font-bold text-lg mb-2">Contact Person</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <input
-              required className="input"
+              required
+              className="input"
               placeholder="Full Name"
               value={form.contactPerson.name}
               onChange={(e) => updateContactPerson("name", e.target.value)}
@@ -207,13 +257,15 @@ function VendorApplicationForm() {
               onChange={(e) => updateContactPerson("position", e.target.value)}
             />
             <input
-              required className="input"
+              required
+              className="input"
               placeholder="Phone"
               value={form.contactPerson.phone}
               onChange={(e) => updateContactPerson("phone", e.target.value)}
             />
             <input
-              required className="input"
+              required
+              className="input"
               placeholder="Email"
               value={form.contactPerson.email}
               onChange={(e) => updateContactPerson("email", e.target.value)}
@@ -226,31 +278,36 @@ function VendorApplicationForm() {
           <h2 className="font-bold text-lg mb-2">Business Address</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <input
-              required className="input"
+              required
+              className="input"
               placeholder="Street"
               value={form.businessAddress.street}
               onChange={(e) => updateBusinessAddress("street", e.target.value)}
             />
             <input
-              required className="input"
+              required
+              className="input"
               placeholder="City"
               value={form.businessAddress.city}
               onChange={(e) => updateBusinessAddress("city", e.target.value)}
             />
             <input
-              required className="input"
+              required
+              className="input"
               placeholder="State"
               value={form.businessAddress.state}
               onChange={(e) => updateBusinessAddress("state", e.target.value)}
             />
             <input
-              required className="input"
+              required
+              className="input"
               placeholder="Zip Code"
               value={form.businessAddress.zipCode}
               onChange={(e) => updateBusinessAddress("zipCode", e.target.value)}
             />
             <input
-              required className="input"
+              required
+              className="input"
               placeholder="Country"
               value={form.businessAddress.country}
               onChange={(e) => updateBusinessAddress("country", e.target.value)}
@@ -279,34 +336,41 @@ function VendorApplicationForm() {
 
         {/* Store Type & Payment Details */}
         <div>
-          <h2 className="font-bold text-lg mb-2">Store Type & Payment Details</h2>
+          <h2 className="font-bold text-lg mb-2">
+            Store Type & Payment Details
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <input
-              required className="input"
+              required
+              className="input"
               placeholder="Store Type (e.g. online, retail)"
               value={form.storeType}
               onChange={(e) => updateField("storeType", e.target.value)}
             />
             <input
-              required className="input"
+              required
+              className="input"
               placeholder="Bank Name"
               value={form.paymentDetails.bankName}
               onChange={(e) => updatePayment("bankName", e.target.value)}
             />
             <input
-              required className="input"
+              required
+              className="input"
               placeholder="Bank Account Number"
               value={form.paymentDetails.accountNumber}
               onChange={(e) => updatePayment("accountNumber", e.target.value)}
             />
             <input
-              required className="input"
+              required
+              className="input"
               placeholder="Routing Number"
               value={form.paymentDetails.routingNumber}
               onChange={(e) => updatePayment("routingNumber", e.target.value)}
             />
             <select
-              required className="input"
+              required
+              className="input"
               value={form.paymentDetails.paymentMethod}
               onChange={(e) => updatePayment("paymentMethod", e.target.value)}
             >
@@ -331,7 +395,10 @@ function VendorApplicationForm() {
           <div className="flex gap-2 mt-2 flex-wrap">
             {shopImages.length > 0 &&
               Array.from(shopImages).map((file, idx) => (
-                <span key={idx} className="text-xs bg-gray-100 px-2 py-1 rounded">
+                <span
+                  key={idx}
+                  className="text-xs bg-gray-100 px-2 py-1 rounded"
+                >
                   {file.name}
                 </span>
               ))}
@@ -342,25 +409,36 @@ function VendorApplicationForm() {
         <div>
           <h2 className="font-bold text-lg mb-2">Sample Products</h2>
           {productSamples.map((ps, idx) => (
-            <div key={idx} className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2 items-end">
+            <div
+              key={idx}
+              className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2 items-end"
+            >
               <input
-                required className="input"
+                required
+                className="input"
                 placeholder="Product Title"
                 value={ps.title}
-                onChange={(e) => handleProductSample(idx, "title", e.target.value)}
+                onChange={(e) =>
+                  handleProductSample(idx, "title", e.target.value)
+                }
               />
               <input
-                required className="input"
+                required
+                className="input"
                 placeholder="Description"
                 value={ps.description}
-                onChange={(e) => handleProductSample(idx, "description", e.target.value)}
+                onChange={(e) =>
+                  handleProductSample(idx, "description", e.target.value)
+                }
               />
               <input
                 required
                 type="file"
                 className="input"
                 accept="image/*"
-                onChange={(e) => handleProductSample(idx, "image", e.target.files[0])}
+                onChange={(e) =>
+                  handleProductSample(idx, "image", e.target.files[0])
+                }
               />
               {productSamples.length > 1 && (
                 <button
