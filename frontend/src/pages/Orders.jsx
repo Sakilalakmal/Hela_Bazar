@@ -7,17 +7,16 @@ import ConfirmDialog from "../components/ConfirmDialog";
 function Orders() {
   const { token } = useAuth();
   const [orders, setOrders] = useState([]);
-  const [orderCount, setOrderCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [msg, setMsg] = useState("");
 
-  // Modal State
+  // Modal & order detail
   const [showModal, setShowModal] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [detailsLoading, setDetailsLoading] = useState(false);
   const [orderDetails, setOrderDetails] = useState(null);
 
-  // Confirm Dialog State
+  // Confirm dialog state
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [pendingCancelOrderId, setPendingCancelOrderId] = useState(null);
   const [cancelFromModal, setCancelFromModal] = useState(false);
@@ -32,7 +31,6 @@ function Orders() {
     getMyOrders(token)
       .then((data) => {
         setOrders(data.orders);
-        setOrderCount(data.orderCount || data.orders.length);
         setLoading(false);
       })
       .catch((err) => {
@@ -42,7 +40,7 @@ function Orders() {
       });
   }, [token]);
 
-  // Open modal and fetch details
+  // Modal details
   const handleShowDetails = async (orderId) => {
     setShowModal(true);
     setSelectedOrderId(orderId);
@@ -59,7 +57,7 @@ function Orders() {
     }
   };
 
-  // Custom dialog flow
+  // ConfirmDialog logic
   const startCancelOrder = (orderId, fromModal = false) => {
     setPendingCancelOrderId(orderId);
     setCancelFromModal(fromModal);
@@ -80,17 +78,15 @@ function Orders() {
     setCancelFromModal(false);
   };
 
-  // The actual cancel logic (moved out to be called from dialog)
+  // Cancel order logic
   const doCancelOrder = async (orderId, fromModal = false) => {
     try {
       await cancelOrder(orderId, token);
       toast.success("Order cancelled successfully!");
-      // Refetch all orders for UI update
       setLoading(true);
       getMyOrders(token)
         .then((data) => {
           setOrders(data.orders);
-          setOrderCount(data.orderCount || data.orders.length);
           setLoading(false);
         })
         .catch((err) => {
@@ -98,7 +94,7 @@ function Orders() {
           setLoading(false);
         });
 
-      // If in modal, refetch details
+      // If details modal open, update it
       if (fromModal && orderId === selectedOrderId) {
         setDetailsLoading(true);
         try {
@@ -116,46 +112,32 @@ function Orders() {
 
   const statusColor = (status) => {
     switch (status) {
-      case "pending":
-        return "bg-yellow-100 text-yellow-700";
-      case "confirmed":
-        return "bg-blue-100 text-blue-700";
-      case "processing":
-        return "bg-purple-100 text-purple-700";
-      case "shipped":
-        return "bg-orange-100 text-orange-700";
-      case "delivered":
-        return "bg-green-100 text-green-700";
-      case "cancelled":
-        return "bg-red-100 text-red-700";
-      default:
-        return "bg-gray-100 text-gray-700";
+      case "pending": return "bg-yellow-100 text-yellow-700";
+      case "confirmed": return "bg-blue-100 text-blue-700";
+      case "processing": return "bg-purple-100 text-purple-700";
+      case "shipped": return "bg-orange-100 text-orange-700";
+      case "delivered": return "bg-green-100 text-green-700";
+      case "cancelled": return "bg-red-100 text-red-700";
+      default: return "bg-gray-100 text-gray-700";
     }
   };
 
-  // Util: Can this order be cancelled?
   const isCancellable = (order) =>
     order.status !== "cancelled" && order.status !== "delivered";
 
   if (loading)
     return <p className="text-center py-10 text-lg">Loading your orders...</p>;
-  if (msg) return <p className="text-center text-red-500 py-10">{msg}</p>;
+  if (msg)
+    return <p className="text-center text-red-500 py-10">{msg}</p>;
   if (!orders.length)
-    return (
-      <p className="text-center text-gray-600 py-10">
-        You have no orders yet. Start shopping!
-      </p>
-    );
+    return <p className="text-center text-gray-600 py-10">You have no orders yet. Start shopping!</p>;
 
   return (
-    <div className="max-w-5xl mx-auto py-10 px-4">
+    <div className="max-w-5xl mx-auto py-10 px-4 relative">
       <h1 className="text-3xl font-bold mb-8 text-center">My Orders</h1>
       <div className="space-y-6">
         {orders.map((order) => (
-          <div
-            key={order._id}
-            className="bg-white rounded-xl shadow p-6 border border-gray-200"
-          >
+          <div key={order._id} className="bg-white rounded-xl shadow p-6 border border-gray-200">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
               <div>
                 <span className="block text-xs text-gray-400 mb-1">
@@ -166,27 +148,20 @@ function Orders() {
                 </span>
               </div>
               <div className="flex items-center gap-2 mt-3 md:mt-0">
-                <span
-                  className={`px-3 py-1 rounded-full text-xs font-bold ${statusColor(
-                    order.status
-                  )}`}
-                >
+                <span className={`px-3 py-1 rounded-full text-xs font-bold ${statusColor(order.status)}`}>
                   {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                 </span>
                 <span className="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-600">
                   {order.paymentMethod?.toUpperCase() || "COD"}
                 </span>
-                <span
-                  className={`px-2 py-1 text-xs rounded-full ${
-                    order.paymentStatus === "paid"
-                      ? "bg-green-100 text-green-700"
-                      : order.paymentStatus === "pending"
-                      ? "bg-yellow-100 text-yellow-700"
-                      : "bg-red-100 text-red-700"
-                  }`}
-                >
-                  {order.paymentStatus.charAt(0).toUpperCase() +
-                    order.paymentStatus.slice(1)}
+                <span className={`px-2 py-1 text-xs rounded-full ${
+                  order.paymentStatus === "paid"
+                    ? "bg-green-100 text-green-700"
+                    : order.paymentStatus === "pending"
+                    ? "bg-yellow-100 text-yellow-700"
+                    : "bg-red-100 text-red-700"
+                }`}>
+                  {order.paymentStatus.charAt(0).toUpperCase() + order.paymentStatus.slice(1)}
                 </span>
                 <span className="font-bold text-lg text-blue-700 ml-2">
                   ${order.totalAmount.toFixed(2)}
@@ -196,12 +171,10 @@ function Orders() {
             <div className="flex justify-between items-center">
               <div>
                 <p className="text-sm font-semibold text-gray-800">
-                  Shipping To: {order.shippingAddress.name} |{" "}
-                  {order.shippingAddress.phone}
+                  Shipping To: {order.shippingAddress.name} | {order.shippingAddress.phone}
                 </p>
                 <p className="text-sm text-gray-500 mb-2">
-                  {order.shippingAddress.street}, {order.shippingAddress.city},{" "}
-                  {order.shippingAddress.country}
+                  {order.shippingAddress.street}, {order.shippingAddress.city}, {order.shippingAddress.country}
                 </p>
               </div>
               <div className="flex gap-4 items-center">
@@ -225,9 +198,9 @@ function Orders() {
         ))}
       </div>
 
-      {/* Top-of-screen modal for order details */}
+      {/* Details modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 bg-black bg-opacity-40">
+        <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 bg-black bg-opacity-40 backdrop-blur">
           <div className="bg-white max-w-2xl w-full rounded-lg shadow-lg p-6 relative">
             <button
               className="absolute top-3 right-4 text-gray-500 hover:text-red-600 text-2xl"
@@ -249,28 +222,20 @@ function Orders() {
                   Placed on: {new Date(orderDetails.createdAt).toLocaleString()}
                 </div>
                 <div className="mb-2 flex gap-3 items-center">
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-bold ${statusColor(
-                      orderDetails.status
-                    )}`}
-                  >
-                    {orderDetails.status.charAt(0).toUpperCase() +
-                      orderDetails.status.slice(1)}
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold ${statusColor(orderDetails.status)}`}>
+                    {orderDetails.status.charAt(0).toUpperCase() + orderDetails.status.slice(1)}
                   </span>
                   <span className="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-600">
                     {orderDetails.paymentMethod?.toUpperCase() || "COD"}
                   </span>
-                  <span
-                    className={`px-2 py-1 text-xs rounded-full ${
-                      orderDetails.paymentStatus === "paid"
-                        ? "bg-green-100 text-green-700"
-                        : orderDetails.paymentStatus === "pending"
-                        ? "bg-yellow-100 text-yellow-700"
-                        : "bg-red-100 text-red-700"
-                    }`}
-                  >
-                    {orderDetails.paymentStatus.charAt(0).toUpperCase() +
-                      orderDetails.paymentStatus.slice(1)}
+                  <span className={`px-2 py-1 text-xs rounded-full ${
+                    orderDetails.paymentStatus === "paid"
+                      ? "bg-green-100 text-green-700"
+                      : orderDetails.paymentStatus === "pending"
+                      ? "bg-yellow-100 text-yellow-700"
+                      : "bg-red-100 text-red-700"
+                  }`}>
+                    {orderDetails.paymentStatus.charAt(0).toUpperCase() + orderDetails.paymentStatus.slice(1)}
                   </span>
                   <span className="font-bold text-lg text-blue-700 ml-2">
                     ${orderDetails.totalAmount.toFixed(2)}
@@ -346,14 +311,21 @@ function Orders() {
         </div>
       )}
 
-      {/* ConfirmDialog for cancel */}
-      <ConfirmDialog
-        open={confirmOpen}
-        title="Cancel this order?"
-        message="Are you sure you want to cancel this order? This cannot be undone."
-        onConfirm={confirmCancelOrder}
-        onCancel={cancelDialog}
-      />
+      {/* Blurred background ConfirmDialog for cancel */}
+      {confirmOpen && (
+        <div className="fixed inset-0 z-[99] flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+          <div className="relative z-10">
+            <ConfirmDialog
+              open={confirmOpen}
+              title="Cancel this order?"
+              message="Are you sure you want to cancel this order? This cannot be undone."
+              onConfirm={confirmCancelOrder}
+              onCancel={cancelDialog}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
