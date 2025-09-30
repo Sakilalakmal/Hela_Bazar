@@ -1,5 +1,6 @@
 import sriLankaVideo from "../assets/videos/Sri_Lanka_Promotional_Video_Creation.mp4";
 import promo from '../assets/videos/promo.mp4';
+import hero from "../assets/videos/hero.mp4";
 
 function Home() {
   return (
@@ -15,7 +16,7 @@ function Home() {
             loop
             playsInline
           >
-            <source src={promo} type="video/mp4" />
+            <source src={hero} type="video/mp4" />
             Your browser does not support the video tag.
           </video>
 
