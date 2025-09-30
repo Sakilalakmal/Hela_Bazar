@@ -11,6 +11,7 @@ import Register from "./pages/Register";
 import RequestOtp from "./pages/requestOtp";
 import VendorApplicationForm from "./pages/VendorApplicationForm";
 import Profile from "./pages/Profile";
+import AddProductForm from "./components/AddProductForm";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="register" element={<Register />} />
           <Route path="become-vendor" element={<VendorApplicationForm />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="/vendor/add-product" element={<AddProductForm />} />
         </Route>
       </Routes>
     </BrowserRouter>
