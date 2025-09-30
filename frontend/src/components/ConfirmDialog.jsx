@@ -1,28 +1,24 @@
-// src/components/ConfirmDialog.jsx
-function ConfirmDialog({ open, title, message, onConfirm, onCancel }) {
+// components/ConfirmDialog.jsx
+export default function ConfirmDialog({ open, title, message, onConfirm, onCancel }) {
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-      <div className="bg-white rounded-xl shadow-lg max-w-sm w-full p-6 relative">
-        <h2 className="text-lg font-bold mb-2">{title || "Are you sure?"}</h2>
-        <p className="mb-6 text-gray-700">{message}</p>
-        <div className="flex gap-3 justify-end">
-          <button
-            className="px-4 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300 font-semibold"
-            onClick={onCancel}
-          >
-            Cancel
-          </button>
-          <button
-            className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700 font-semibold"
-            onClick={onConfirm}
-          >
-            Yes, Cancel Order
-          </button>
-        </div>
+    <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-sm border border-gray-200 mx-auto">
+      <h2 className="font-bold text-lg mb-2 text-gray-900">{title}</h2>
+      <p className="mb-6 text-gray-600">{message}</p>
+      <div className="flex justify-end gap-3">
+        <button 
+          className="px-6 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors font-medium" 
+          onClick={onCancel}
+        >
+          Cancel
+        </button>
+        <button 
+          className="px-6 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors font-medium" 
+          onClick={onConfirm}
+        >
+          Yes, Cancel
+        </button>
       </div>
     </div>
   );
 }
-
-export default ConfirmDialog;
