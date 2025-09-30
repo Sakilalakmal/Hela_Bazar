@@ -37,7 +37,7 @@ export const getOrderDetails = async (orderId, token) => {
 export const cancelOrder = async (orderId, token) => {
   try {
     const response = await fetch(`${API_URL}/orders/cancel/${orderId}`, {
-      method: "DELETE",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
