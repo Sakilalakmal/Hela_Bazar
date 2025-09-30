@@ -9,6 +9,7 @@ import Orders from "./pages/Orders";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import RequestOtp from "./pages/requestOtp";
+import VendorApplicationForm from "./pages/VendorApplicationForm";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="orders" element={<Orders />} />
           <Route path="login" element={<RequestOtp />} />
           <Route path="register" element={<Register />} />
+          <Route path="become-vendor" element={<VendorApplicationForm />} />
           
         </Route>
       </Routes>
