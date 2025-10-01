@@ -41,4 +41,10 @@ vendorRouter.get(
   vendorController.getVendorOrder
 );
 
+vendorRouter.get(
+  "/vendors/products",
+  isAuthenticatedUser,
+  vendorController.getVendorProducts
+);
+
 module.exports = vendorRouter;
