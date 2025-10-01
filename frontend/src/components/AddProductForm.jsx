@@ -1,11 +1,14 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { addProduct } from "../services/product_Add";
+import { useAuth } from "../context/AuthContext";
 
 // Helper for variants/customizations
 const blankVariant = { optionName: "", optionValues: "" };
 const blankCustomization = { type: "", values: "" };
 
-export default function AddProductForm({ onSubmit, submitting }) {
+export default function AddProductForm() {
+  const { token } = useAuth();
   const [form, setForm] = useState({
     name: "",
     brand: "",
@@ -22,7 +25,8 @@ export default function AddProductForm({ onSubmit, submitting }) {
   const [images, setImages] = useState([]);
   const [variants, setVariants] = useState([]);
   const [customizations, setCustomizations] = useState([]);
-  
+  const [submitting, setSubmitting] = useState(false);
+
   // Add/remove helpers
   const addVariant = () => setVariants([...variants, { ...blankVariant }]);
   const removeVariant = (idx) => setVariants(variants.filter((_, i) => i !== idx));
@@ -53,16 +57,16 @@ export default function AddProductForm({ onSubmit, submitting }) {
   };
 
   // Submit
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.name || !form.description || !form.category || !form.price || !form.stock || images.length === 0) {
       toast.error("Please fill all required fields and add at least one image.");
       return;
     }
-    // Clean up fields for backend:
+
     const data = {
       ...form,
-      tags: form.tags ? form.tags.split(",").map((t) => t.trim()) : [],
+      tags: form.tags, // let service handle string->array
       variants: variants.filter(v => v.optionName && v.optionValues).map(v => ({
         optionName: v.optionName,
         optionValues: v.optionValues.split(",").map(o => o.trim()),
@@ -73,7 +77,33 @@ export default function AddProductForm({ onSubmit, submitting }) {
       })),
       images,
     };
-    onSubmit(data, images); // You will handle images in service as FormData!
+
+    setSubmitting(true);
+    try {
+      await addProduct(data, token);
+      toast.success("Product added successfully!");
+      // Reset form after success
+      setForm({
+        name: "",
+        brand: "",
+        description: "",
+        category: "",
+        tags: "",
+        price: "",
+        stock: "",
+        discount: "",
+        slug: "",
+        isActive: true,
+        isFeatured: false,
+      });
+      setImages([]);
+      setVariants([]);
+      setCustomizations([]);
+    } catch (err) {
+      toast.error(err.message || "Failed to add product");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -121,7 +151,8 @@ export default function AddProductForm({ onSubmit, submitting }) {
       {/* Images */}
       <div>
         <label className="block text-sm font-semibold mb-2">Product Images *</label>
-        <input type="file" className="input" multiple accept="image/*" onChange={handleImages} required />
+        <input type="file" className="input" multiple accept="image/*" onChange={handleImages} />
+        <p className="text-xs text-gray-400 mt-1">Maximum 5MB each. JPG/PNG only.</p>
         {images.length > 0 && (
           <div className="flex gap-3 mt-2 flex-wrap">
             {images.map((img, idx) => (
@@ -187,7 +218,7 @@ export default function AddProductForm({ onSubmit, submitting }) {
             submitting
               ? "bg-gray-400 cursor-not-allowed text-white"
               : "bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
-          }`}>
+          }` }>
           {submitting ? "Adding Product..." : "Add Product"}
         </button>
       </div>
