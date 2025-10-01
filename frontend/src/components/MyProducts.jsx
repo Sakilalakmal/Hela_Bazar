@@ -1,9 +1,9 @@
-// Create src/pages/MyProducts.jsx
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { getVendorProducts } from "../services/vendorService";
+import { getVendorProducts, deleteProduct } from "../services/vendorService";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import ConfirmDialog from "./ConfirmDialog";
 
 function MyProducts() {
   const { token } = useAuth();
@@ -11,6 +11,11 @@ function MyProducts() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [productCount, setProductCount] = useState(0);
+  const [deletingProductId, setDeletingProductId] = useState(null);
+  
+  // Add these states for the custom dialog
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
 
   useEffect(() => {
     if (!token) {
@@ -29,6 +34,39 @@ function MyProducts() {
         setLoading(false);
       });
   }, [token, navigate]);
+
+  // Updated delete product handler to use custom dialog
+  const handleDeleteClick = (productId, productName) => {
+    setProductToDelete({ id: productId, name: productName });
+    setShowDeleteDialog(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!productToDelete) return;
+
+    setDeletingProductId(productToDelete.id);
+    setShowDeleteDialog(false);
+    
+    try {
+      await deleteProduct(productToDelete.id, token);
+      
+      // Remove the deleted product from the local state
+      setProducts(prevProducts => prevProducts.filter(p => p._id !== productToDelete.id));
+      setProductCount(prevCount => prevCount - 1);
+      
+      toast.success(`"${productToDelete.name}" has been deleted successfully!`);
+    } catch (error) {
+      toast.error(error.message || "Failed to delete product");
+    } finally {
+      setDeletingProductId(null);
+      setProductToDelete(null);
+    }
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteDialog(false);
+    setProductToDelete(null);
+  };
 
   if (loading) {
     return (
@@ -151,15 +189,32 @@ function MyProducts() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => navigate(`/products/${product._id}`)}
-                      className="flex-1 bg-gray-100 text-gray-700 py-2 px-3 rounded-lg text-xs font-medium hover:bg-gray-200 transition-colors"
+                      className="flex-1 bg-gray-100 text-gray-700 py-2 px-2 rounded-lg text-xs font-medium hover:bg-gray-200 transition-colors"
                     >
                       View
                     </button>
                     <button
                       onClick={() => navigate(`/edit-product/${product._id}`)}
-                      className="flex-1 bg-blue-900 text-white py-2 px-3 rounded-lg text-xs font-medium hover:bg-blue-800 transition-colors"
+                      className="flex-1 bg-blue-900 text-white py-2 px-2 rounded-lg text-xs font-medium hover:bg-blue-800 transition-colors"
                     >
                       Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteClick(product._id, product.name)}
+                      disabled={deletingProductId === product._id}
+                      className={`flex-1 py-2 px-2 rounded-lg text-xs font-medium transition-colors ${
+                        deletingProductId === product._id
+                          ? 'bg-gray-400 text-white cursor-not-allowed'
+                          : 'bg-red-600 text-white hover:bg-red-700'
+                      }`}
+                    >
+                      {deletingProductId === product._id ? (
+                        <div className="flex items-center justify-center">
+                          <div className="w-3 h-3 border border-white border-t-transparent rounded-full animate-spin"></div>
+                        </div>
+                      ) : (
+                        'Delete'
+                      )}
                     </button>
                   </div>
                 </div>
@@ -168,6 +223,22 @@ function MyProducts() {
           </div>
         )}
       </div>
+
+      {/* ConfirmDialog with blurred background - Same as Orders.jsx */}
+      {showDeleteDialog && (
+        <div className="fixed inset-0 z-[99] flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+          <div className="relative z-10">
+            <ConfirmDialog
+              open={showDeleteDialog}
+              title="Delete Product"
+              message={`Are you sure you want to delete "${productToDelete?.name}"? This action cannot be undone and will permanently remove the product and all its images.`}
+              onConfirm={confirmDelete}
+              onCancel={cancelDelete}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
