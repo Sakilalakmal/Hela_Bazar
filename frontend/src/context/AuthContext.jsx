@@ -1,4 +1,4 @@
-import { createContext , useContext , useEffect , useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const AuthContext = createContext();
 
@@ -8,6 +8,7 @@ export function AuthProvider({ children }) {
     return saved ? JSON.parse(saved) : null;
   });
   const [token, setToken] = useState(() => localStorage.getItem("token"));
+  const [loading, setLoading] = useState(false);
 
   // Sync to localStorage
   useEffect(() => {
@@ -30,8 +31,51 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("user");
   }
 
+  // Role checking functions
+  const isAdmin = () => {
+    return user?.role === 'admin';
+  };
+
+  const isVendor = () => {
+    return user?.role === 'vendor';
+  };
+
+  const isUser = () => {
+    return user?.role === 'user' || user?.role === 'consumer';
+  };
+
+  const isLoggedIn = () => {
+    return !!(user && token);
+  };
+
+  // Get user role
+  const getUserRole = () => {
+    return user?.role || null;
+  };
+
+  // Check if user has specific role
+  const hasRole = (roles) => {
+    if (!user?.role) return false;
+    if (Array.isArray(roles)) {
+      return roles.includes(user.role);
+    }
+    return user.role === roles;
+  };
+
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      token, 
+      loading,
+      login, 
+      logout,
+      isAdmin,
+      isVendor,
+      isUser,
+      isLoggedIn,
+      getUserRole,
+      hasRole
+    }}>
       {children}
     </AuthContext.Provider>
   );
