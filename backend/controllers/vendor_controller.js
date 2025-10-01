@@ -233,6 +233,43 @@ const vendorController = {
       });
     }
   }),
+
+  getVendorProducts: asyncHandler(async(req,res)=>{
+    try {
+
+      const userId = req.user.id;
+
+      // check user is vendor
+      const vendorApplication = await VendorApplication.findOne({ userId });
+      if (!vendorApplication) {
+        return res.status(404).json({
+          message: "Vendor application not found",
+        });
+      }
+
+      // fetch vendor products
+      const vendorProducts = await Product.find({ vendorId: vendorApplication._id })
+        .populate("categoryId", "name")
+        .sort({ createdAt: -1 });
+
+      if (!vendorProducts || vendorProducts.length === 0) {
+        return res.status(404).json({
+          message: "No products found for your vendor account",
+        });
+      }
+
+      res.status(200).json({
+        message: "Vendor products fetched successfully",
+        products: vendorProducts,
+        productCount: vendorProducts.length,
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: "Error fetching vendor products",
+        error: error.message,
+      });
+    }
+  }),
 };
 
 module.exports = vendorController;
