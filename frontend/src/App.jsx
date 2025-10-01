@@ -13,6 +13,7 @@ import VendorApplicationForm from "./pages/VendorApplicationForm";
 import Profile from "./pages/Profile";
 import AddProductForm from "./components/AddProductForm";
 import MyProducts from "./components/MyProducts";
+import EditProduct from "./pages/EditProduct";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path="profile" element={<Profile />} />
           <Route path="/vendor/add-product" element={<AddProductForm />} />
           <Route path="/my-products" element={<MyProducts />} />
+          <Route path="/edit-product/:productId" element={<EditProduct />} />
         </Route>
       </Routes>
     </BrowserRouter>
