@@ -12,6 +12,7 @@ import RequestOtp from "./pages/requestOtp";
 import VendorApplicationForm from "./pages/VendorApplicationForm";
 import Profile from "./pages/Profile";
 import AddProductForm from "./components/AddProductForm";
+import MyProducts from "./components/MyProducts";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <Route path="become-vendor" element={<VendorApplicationForm />} />
           <Route path="profile" element={<Profile />} />
           <Route path="/vendor/add-product" element={<AddProductForm />} />
+          <Route path="/my-products" element={<MyProducts />} />
         </Route>
       </Routes>
     </BrowserRouter>
