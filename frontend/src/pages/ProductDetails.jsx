@@ -204,6 +204,39 @@ function ProductDetails() {
                   ))}
                 </div>
               )}
+
+              {/* Customization Options */}
+              {product.customizationOptions &&
+                product.customizationOptions.length > 0 && (
+                  <div className="border-t border-gray-200 p-8">
+                    <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                      Available Customizations
+                    </h2>
+                    <div className="space-y-4">
+                      {product.customizationOptions.map((opt, idx) => (
+                        <div
+                          key={idx}
+                          className="bg-gray-50 p-4 rounded-lg border border-gray-200"
+                        >
+                          <h3 className="font-semibold text-gray-800 mb-2">
+                            {opt.type}
+                          </h3>
+                          {opt.values && opt.values.length > 0 ? (
+                            <ul className="list-disc list-inside space-y-1 text-gray-700">
+                              {opt.values.map((val, i) => (
+                                <li key={i}>{val}</li>
+                              ))}
+                            </ul>
+                          ) : (
+                            <p className="text-gray-500 text-sm">
+                              No details provided
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
             </div>
 
             {/* Right Side - Product Info */}
@@ -341,7 +374,7 @@ function ProductDetails() {
               {/* Action Buttons */}
               <div className="space-y-3">
                 <button
-                onClick={addTocartHandle}
+                  onClick={addTocartHandle}
                   className={`w-full py-3 px-6 rounded-lg font-semibold text-lg transition-all ${
                     stock > 0
                       ? "bg-yellow-400 hover:bg-yellow-500 text-gray-900"
