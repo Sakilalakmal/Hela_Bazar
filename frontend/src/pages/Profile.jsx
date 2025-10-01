@@ -133,6 +133,26 @@ function Profile() {
                 <span className="text-gray-500">Status</span>
                 <p className="font-medium text-green-600">Active</p>
               </div>
+
+              <button
+                onClick={() => (window.location.href = "/my-products")}
+                className="bg-blue-900 text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-blue-800 transition-colors duration-200 flex items-center"
+              >
+                <svg
+                  className="w-4 h-4 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                  />
+                </svg>
+                My Products
+              </button>
             </div>
           </div>
         </div>
