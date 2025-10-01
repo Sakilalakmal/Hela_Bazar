@@ -49,3 +49,118 @@ export const cancelOrder = async (orderId, token) => {
     throw error;
   }
 };
+
+//? review section in order page
+
+// Add these functions to your existing orderService.js
+
+// Get existing review for product/order
+export const getUserReview = async (productId, orderId, token) => {
+  const response = await fetch(
+    `${
+      import.meta.env.VITE_API_URL || "http://localhost:3000"
+    }/reviews/get/for/order?productId=${productId}&orderId=${orderId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    if (response.status === 404) {
+      return { review: null }; // No review found, that's okay
+    }
+    const errorData = await response
+      .json()
+      .catch(() => ({ message: "Network error" }));
+    throw new Error(
+      errorData.message || `HTTP ${response.status}: ${response.statusText}`
+    );
+  }
+
+  return response.json();
+};
+
+// Create review
+export const createReview = async (reviewData, token) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/reviews/add`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(reviewData),
+    }
+  );
+
+  if (!response.ok) {
+    const errorData = await response
+      .json()
+      .catch(() => ({ message: "Network error" }));
+    throw new Error(
+      errorData.message || `HTTP ${response.status}: ${response.statusText}`
+    );
+  }
+
+  return response.json();
+};
+
+// Update review
+export const updateReview = async (reviewId, reviewData, token) => {
+  const response = await fetch(
+    `${
+      import.meta.env.VITE_API_URL || "http://localhost:3000"
+    }/reviews/update/${reviewId}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(reviewData),
+    }
+  );
+
+  if (!response.ok) {
+    const errorData = await response
+      .json()
+      .catch(() => ({ message: "Network error" }));
+    throw new Error(
+      errorData.message || `HTTP ${response.status}: ${response.statusText}`
+    );
+  }
+
+  return response.json();
+};
+
+// Delete review
+export const deleteReview = async (reviewId, token) => {
+  const response = await fetch(
+    `${
+      import.meta.env.VITE_API_URL || "http://localhost:3000"
+    }/reviews/delete/${reviewId}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    const errorData = await response
+      .json()
+      .catch(() => ({ message: "Network error" }));
+    throw new Error(
+      errorData.message || `HTTP ${response.status}: ${response.statusText}`
+    );
+  }
+
+  return response.json();
+};
