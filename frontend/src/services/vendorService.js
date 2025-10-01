@@ -64,3 +64,23 @@ export const deleteProduct = async (productId, token) => {
   }
   return data;
 };
+
+//! get vendor orders
+// Add this function to your existing orderService.js
+
+export const getVendorOrders = async (token) => {
+  const response = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/vendor/orders`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({ message: 'Network error' }));
+    throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
+  }
+
+  return response.json();
+};
