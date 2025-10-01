@@ -14,6 +14,7 @@ import Profile from "./pages/Profile";
 import AddProductForm from "./components/AddProductForm";
 import MyProducts from "./components/MyProducts";
 import EditProduct from "./pages/EditProduct";
+import VendorOrders from "./pages/VendorOrders";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route path="/vendor/add-product" element={<AddProductForm />} />
           <Route path="/my-products" element={<MyProducts />} />
           <Route path="/edit-product/:productId" element={<EditProduct />} />
+          <Route path="/vendor-orders" element={<VendorOrders />} />
         </Route>
       </Routes>
     </BrowserRouter>
