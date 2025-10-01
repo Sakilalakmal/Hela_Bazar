@@ -62,7 +62,7 @@ function MyProducts() {
                 Back to Profile
               </button>
               <button
-                onClick={() => navigate('/add-product')}
+                onClick={() => navigate('/vendor/add-product')}
                 className="bg-blue-900 text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition-colors flex items-center"
               >
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -150,7 +150,7 @@ function MyProducts() {
                   {/* Action Buttons */}
                   <div className="flex gap-2">
                     <button
-                      onClick={() => navigate(`/product/${product._id}`)}
+                      onClick={() => navigate(`/products/${product._id}`)}
                       className="flex-1 bg-gray-100 text-gray-700 py-2 px-3 rounded-lg text-xs font-medium hover:bg-gray-200 transition-colors"
                     >
                       View
