@@ -81,13 +81,13 @@ function ProductDetails() {
     for (let i = 0; i < 5; i++) {
       if (i < fullStars) {
         stars.push(
-          <span key={i} className="text-yellow-400 text-lg">
+          <span key={i} className="text-[#C2A68C] text-lg">
             ★
           </span>
         );
       } else if (i === fullStars && hasHalfStar) {
         stars.push(
-          <span key={i} className="text-yellow-300 text-lg">
+          <span key={i} className="text-[#C2A68C]/70 text-lg">
             ★
           </span>
         );
@@ -104,10 +104,10 @@ function ProductDetails() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-[#F5F5F0]">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-xl font-semibold text-gray-600">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#5D866C] mx-auto mb-4"></div>
+          <p className="text-xl font-semibold text-[#5D866C]">
             Loading product details...
           </p>
         </div>
@@ -117,12 +117,12 @@ function ProductDetails() {
 
   if (!product) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-[#F5F5F0]">
         <div className="text-center">
           <p className="text-red-500 text-xl font-semibold mb-2">
             Product not found
           </p>
-          <p className="text-gray-600">
+          <p className="text-[#5D866C]">
             The product you're looking for doesn't exist.
           </p>
         </div>
@@ -150,15 +150,15 @@ function ProductDetails() {
   const hasDiscount = discount > 0;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4">
+    <div className="min-h-screen bg-[#F5F5F0]">
+      <div className="w-full">
         {/* Main Product Layout */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div className="bg-white">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
             {/* Left Side - Images */}
             <div className="space-y-4">
               {/* Main Image */}
-              <div className="relative bg-gray-50 rounded-xl overflow-hidden">
+              <div className="relative bg-[#E6D8C3] rounded-xl overflow-hidden">
                 <img
                   src={
                     images[selectedImageIndex] ||
@@ -191,8 +191,8 @@ function ProductDetails() {
                       onClick={() => setSelectedImageIndex(index)}
                       className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
                         selectedImageIndex === index
-                          ? "border-blue-500 shadow-md"
-                          : "border-gray-200 hover:border-gray-300"
+                          ? "border-[#5D866C] shadow-md"
+                          : "border-[#E6D8C3] hover:border-[#C2A68C]"
                       }`}
                     >
                       <img
@@ -208,27 +208,27 @@ function ProductDetails() {
               {/* Customization Options */}
               {product.customizationOptions &&
                 product.customizationOptions.length > 0 && (
-                  <div className="border-t border-gray-200 p-8">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                  <div className="border-t border-[#E6D8C3] p-8">
+                    <h2 className="text-2xl font-bold text-[#5D866C] mb-4">
                       Available Customizations
                     </h2>
                     <div className="space-y-4">
                       {product.customizationOptions.map((opt, idx) => (
                         <div
                           key={idx}
-                          className="bg-gray-50 p-4 rounded-lg border border-gray-200"
+                          className="bg-[#E6D8C3] p-4 rounded-lg border border-[#C2A68C]"
                         >
-                          <h3 className="font-semibold text-gray-800 mb-2">
+                          <h3 className="font-semibold text-[#5D866C] mb-2">
                             {opt.type}
                           </h3>
                           {opt.values && opt.values.length > 0 ? (
-                            <ul className="list-disc list-inside space-y-1 text-gray-700">
+                            <ul className="list-disc list-inside space-y-1 text-[#5D866C]">
                               {opt.values.map((val, i) => (
                                 <li key={i}>{val}</li>
                               ))}
                             </ul>
                           ) : (
-                            <p className="text-gray-500 text-sm">
+                            <p className="text-[#C2A68C] text-sm">
                               No details provided
                             </p>
                           )}
@@ -243,10 +243,10 @@ function ProductDetails() {
             <div className="space-y-6">
               {/* Brand & Category */}
               <div className="flex items-center gap-3">
-                <span className="text-sm font-medium text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
+                <span className="text-sm font-medium text-[#5D866C] bg-[#E6D8C3] px-3 py-1 rounded-full">
                   {brand || "No Brand"}
                 </span>
-                <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                <span className="text-sm text-[#C2A68C] bg-[#F5F5F0] px-3 py-1 rounded-full">
                   {category || "General"}
                 </span>
                 <span
@@ -262,7 +262,7 @@ function ProductDetails() {
 
               {/* Product Title */}
               <div>
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                <h1 className="text-3xl font-bold text-[#5D866C] mb-2">
                   {name}
                 </h1>
               </div>
@@ -272,22 +272,22 @@ function ProductDetails() {
                 <div className="flex items-center gap-1">
                   {renderStars(rating)}
                 </div>
-                <span className="text-lg font-semibold text-gray-700">
+                <span className="text-lg font-semibold text-[#5D866C]">
                   {rating > 0 ? rating.toFixed(1) : "0.0"}
                 </span>
                 {reviewCount > 0 && (
-                  <span className="text-blue-600 hover:underline cursor-pointer">
+                  <span className="text-[#C2A68C] hover:text-[#5D866C] hover:underline cursor-pointer transition-colors">
                     ({reviewCount} customer reviews)
                   </span>
                 )}
               </div>
 
               {/* Price */}
-              <div className="border-t border-b border-gray-200 py-4">
+              <div className="border-t border-b border-[#E6D8C3] py-4">
                 <div className="flex items-center gap-3">
                   {hasDiscount ? (
                     <>
-                      <span className="text-3xl font-bold text-red-600">
+                      <span className="text-3xl font-bold text-[#C2A68C]">
                         ${discountedPrice.toFixed(2)}
                       </span>
                       <span className="text-xl text-gray-500 line-through">
@@ -298,7 +298,7 @@ function ProductDetails() {
                       </span>
                     </>
                   ) : (
-                    <span className="text-3xl font-bold text-gray-900">
+                    <span className="text-3xl font-bold text-[#5D866C]">
                       ${price.toFixed(2)}
                     </span>
                   )}
@@ -307,21 +307,21 @@ function ProductDetails() {
 
               {/* Vendor Info */}
               {vendorId && (
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h3 className="text-sm font-semibold text-gray-700 mb-2">
+                <div className="bg-[#E6D8C3] rounded-lg p-4 border border-[#C2A68C]">
+                  <h3 className="text-sm font-semibold text-[#5D866C] mb-2">
                     Sold by
                   </h3>
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                    <div className="w-10 h-10 bg-[#5D866C] rounded-full flex items-center justify-center">
                       <span className="text-white font-semibold text-sm">
                         {vendorId.username?.charAt(0).toUpperCase() || "V"}
                       </span>
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900">
+                      <p className="font-medium text-[#5D866C]">
                         {vendorId.username || "Unknown Vendor"}
                       </p>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-[#C2A68C]">
                         {vendorId.email || "No email provided"}
                       </p>
                     </div>
@@ -331,21 +331,21 @@ function ProductDetails() {
 
               {/* Quantity Selector */}
               <div className="flex items-center gap-4">
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium text-[#5D866C]">
                   Quantity:
                 </span>
-                <div className="flex items-center border border-gray-300 rounded-lg">
+                <div className="flex items-center border border-[#C2A68C] rounded-lg">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="px-3 py-2 hover:bg-gray-100 transition-colors"
+                    className="px-3 py-2 hover:bg-[#E6D8C3] transition-colors text-[#5D866C]"
                     disabled={quantity <= 1}
                   >
                     -
                   </button>
-                  <span className="px-4 py-2 font-medium">{quantity}</span>
+                  <span className="px-4 py-2 font-medium text-[#5D866C]">{quantity}</span>
                   <button
                     onClick={() => setQuantity(Math.min(stock, quantity + 1))}
-                    className="px-3 py-2 hover:bg-gray-100 transition-colors"
+                    className="px-3 py-2 hover:bg-[#E6D8C3] transition-colors text-[#5D866C]"
                     disabled={quantity >= stock}
                   >
                     +
@@ -356,7 +356,7 @@ function ProductDetails() {
               <div className="my-6">
                 <label
                   htmlFor="customization"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium text-[#5D866C] mb-2"
                 >
                   Customization (optional)
                 </label>
@@ -364,7 +364,7 @@ function ProductDetails() {
                   id="customization"
                   name="customization"
                   rows={3}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+                  className="w-full px-4 py-3 rounded-lg border border-[#C2A68C] focus:outline-none focus:ring-2 focus:ring-[#5D866C] focus:border-[#5D866C] transition bg-[#F5F5F0]"
                   placeholder="Describe any custom requests for this product (e.g., gift wrapping, engraving, special instructions)"
                   value={customization}
                   onChange={(e) => setCustomization(e.target.value)}
@@ -377,7 +377,7 @@ function ProductDetails() {
                   onClick={addTocartHandle}
                   className={`w-full py-3 px-6 rounded-lg font-semibold text-lg transition-all ${
                     stock > 0
-                      ? "bg-yellow-400 hover:bg-yellow-500 text-gray-900"
+                      ? "bg-[#C2A68C] hover:bg-[#C2A68C]/80 text-white"
                       : "bg-gray-300 text-gray-500 cursor-not-allowed"
                   }`}
                   disabled={stock === 0}
@@ -388,7 +388,7 @@ function ProductDetails() {
                 <button
                   className={`w-full py-3 px-6 rounded-lg font-semibold text-lg transition-all ${
                     stock > 0
-                      ? "bg-orange-400 hover:bg-orange-500 text-white"
+                      ? "bg-[#5D866C] hover:bg-[#5D866C]/80 text-white"
                       : "bg-gray-300 text-gray-500 cursor-not-allowed"
                   }`}
                   disabled={stock === 0}
@@ -398,25 +398,25 @@ function ProductDetails() {
 
                 <button
                   onClick={addWishList}
-                  className="w-full py-3 px-6 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-all"
+                  className="w-full py-3 px-6 bg-[#E6D8C3] hover:bg-[#C2A68C]/20 text-[#5D866C] border border-[#C2A68C] rounded-lg font-medium transition-all"
                 >
                   Add to Wishlist ♡
                 </button>
 
-                {wishMsg && <p className="mt-2 text-pink-700">{wishMsg}</p>}
+                {wishMsg && <p className="mt-2 text-[#C2A68C]">{wishMsg}</p>}
               </div>
 
               {/* Tags */}
               {tags.length > 0 && (
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-700 mb-2">
+                  <h3 className="text-sm font-semibold text-[#5D866C] mb-2">
                     Tags
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {tags.map((tag, index) => (
                       <span
                         key={index}
-                        className="inline-block bg-purple-50 text-purple-600 text-sm font-medium px-3 py-1 rounded-full border border-purple-200"
+                        className="inline-block bg-[#E6D8C3] text-[#5D866C] text-sm font-medium px-3 py-1 rounded-full border border-[#C2A68C]"
                       >
                         #{tag}
                       </span>
@@ -428,12 +428,12 @@ function ProductDetails() {
           </div>
 
           {/* Product Description Section */}
-          <div className="border-t border-gray-200 p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+          <div className="border-t border-[#E6D8C3] p-8">
+            <h2 className="text-2xl font-bold text-[#5D866C] mb-4">
               Product Description
             </h2>
             <div className="prose max-w-none">
-              <p className="text-gray-700 leading-relaxed text-lg">
+              <p className="text-[#5D866C] leading-relaxed text-lg">
                 {description ||
                   "No detailed description available for this product."}
               </p>
@@ -441,33 +441,33 @@ function ProductDetails() {
           </div>
 
           {/* Product Specifications */}
-          <div className="border-t border-gray-200 p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+          <div className="border-t border-[#E6D8C3] p-8">
+            <h2 className="text-2xl font-bold text-[#5D866C] mb-4">
               Product Details
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h3 className="font-semibold text-gray-700 mb-2">
+              <div className="bg-[#E6D8C3] p-4 rounded-lg border border-[#C2A68C]">
+                <h3 className="font-semibold text-[#5D866C] mb-2">
                   Basic Information
                 </h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Brand:</span>
-                    <span className="font-medium">
+                    <span className="text-[#C2A68C]">Brand:</span>
+                    <span className="font-medium text-[#5D866C]">
                       {brand || "Not specified"}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Category:</span>
-                    <span className="font-medium">{category || "General"}</span>
+                    <span className="text-[#C2A68C]">Category:</span>
+                    <span className="font-medium text-[#5D866C]">{category || "General"}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Stock:</span>
-                    <span className="font-medium">{stock} units</span>
+                    <span className="text-[#C2A68C]">Stock:</span>
+                    <span className="font-medium text-[#5D866C]">{stock} units</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Rating:</span>
-                    <span className="font-medium">
+                    <span className="text-[#C2A68C]">Rating:</span>
+                    <span className="font-medium text-[#5D866C]">
                       {rating}/5 ({reviewCount} reviews)
                     </span>
                   </div>
@@ -476,20 +476,20 @@ function ProductDetails() {
             </div>
           </div>
 
-          {/* Review Section - Fix this part */}
-          <div className="border-t border-gray-200 p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          {/* Review Section */}
+          <div className="border-t border-[#E6D8C3] p-8">
+            <h2 className="text-2xl font-bold text-[#5D866C] mb-6">
               Customer Reviews
             </h2>
             {reviewLoading ? (
               <div className="flex items-center justify-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mr-3"></div>
-                <p className="text-gray-600">Loading reviews...</p>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#5D866C] mr-3"></div>
+                <p className="text-[#5D866C]">Loading reviews...</p>
               </div>
             ) : reviews.length === 0 ? (
               <div className="text-center py-8">
-                <p className="text-gray-500 text-lg">No reviews yet.</p>
-                <p className="text-gray-400 text-sm mt-2">
+                <p className="text-[#C2A68C] text-lg">No reviews yet.</p>
+                <p className="text-[#C2A68C] text-sm mt-2">
                   Be the first to review this product!
                 </p>
               </div>
@@ -498,35 +498,35 @@ function ProductDetails() {
                 {reviews.map((review) => (
                   <div
                     key={review._id}
-                    className="bg-gray-50 rounded-lg p-6 border border-gray-200"
+                    className="bg-[#E6D8C3] rounded-lg p-6 border border-[#C2A68C]"
                   >
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                        <div className="w-10 h-10 bg-[#5D866C] rounded-full flex items-center justify-center">
                           <span className="text-white font-semibold text-sm">
                             {review.userId?.username?.charAt(0).toUpperCase() ||
                               "U"}
                           </span>
                         </div>
                         <div>
-                          <p className="font-semibold text-gray-900">
+                          <p className="font-semibold text-[#5D866C]">
                             {review.userId?.username || "Anonymous User"}
                           </p>
                           <div className="flex items-center gap-1">
                             {renderStars(review.rating)}
-                            <span className="text-sm text-gray-600 ml-2">
+                            <span className="text-sm text-[#C2A68C] ml-2">
                               {review.rating}/5
                             </span>
                           </div>
                         </div>
                       </div>
                       {review.createdAt && (
-                        <span className="text-sm text-gray-500">
+                        <span className="text-sm text-[#C2A68C]">
                           {new Date(review.createdAt).toLocaleDateString()}
                         </span>
                       )}
                     </div>
-                    <p className="text-gray-700 leading-relaxed">
+                    <p className="text-[#5D866C] leading-relaxed">
                       {review.reviewText || "No review text provided."}
                     </p>
                   </div>
