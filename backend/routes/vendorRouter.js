@@ -25,7 +25,7 @@ vendorRouter.get(
 vendorRouter.put(
   "/vendor/update",
   isAuthenticatedUser,
-  hasRole(["vendor"]),
+  // hasRole(["vendor"]),
   upload.fields([
     { name: "shopImages", maxCount: 5 },
     { name: "productImages", maxCount: 10 },
