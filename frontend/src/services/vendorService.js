@@ -45,3 +45,22 @@ export const getVendorProducts = async (token) => {
   }
   return data;
 };
+
+//! delete product by vendor
+// Add this function to your existing vendorService.js
+
+export const deleteProduct = async (productId, token) => {
+  const response = await fetch(`${API_URL}/products/delete/${productId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to delete product");
+  }
+  return data;
+};
