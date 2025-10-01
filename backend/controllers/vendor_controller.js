@@ -2,6 +2,8 @@ const asyncHandler = require("express-async-handler");
 const VendorApplication = require("../model/vendor_application_form");
 const User = require("../model/user_model");
 const Order = require("../model/order_model");
+const Product = require("../model/product_model");
+
 
 const vendorController = {
   createVendorApplication: asyncHandler(async (req, res) => {
@@ -248,8 +250,7 @@ const vendorController = {
       }
 
       // fetch vendor products
-      const vendorProducts = await Product.find({ vendorId: vendorApplication._id })
-        .populate("categoryId", "name")
+      const vendorProducts = await Product.find({ vendorId: userId })
         .sort({ createdAt: -1 });
 
       if (!vendorProducts || vendorProducts.length === 0) {
