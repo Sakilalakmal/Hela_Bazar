@@ -13,8 +13,33 @@ export async function fetchSingleProduct(productId) {
 }
 
 export async function fetchReviewForSelectedproduct(productId) {
-  const res = await fetch(`${API_URL}/reviews/product/${productId}`);
-  if(!res.ok) throw new  Error("Failed to fetch Reviews");
-  return res.json();
-  
+  try {
+    const res = await fetch(`${API_URL}/reviews/product/${productId}`);
+
+    // If the response is not ok, check if it's a 404 (no reviews found)
+    if (!res.ok) {
+      if (res.status === 404) {
+        // Return empty reviews array for 404 (no reviews found)
+        return {
+          success: true,
+          message: "No reviews found for this product",
+          reviews: [],
+          reviewCount: 0,
+        };
+      }
+      // For other errors, throw
+      throw new Error(`Failed to fetch reviews: ${res.status}`);
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.error("Error fetching reviews:", error);
+    // Return empty reviews instead of throwing error
+    return {
+      success: false,
+      message: "Could not load reviews",
+      reviews: [],
+      reviewCount: 0,
+    };
+  }
 }
