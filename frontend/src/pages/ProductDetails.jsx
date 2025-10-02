@@ -27,7 +27,7 @@ function ProductDetails() {
   const [editLoading, setEditLoading] = useState(false);
   const [editForm, setEditForm] = useState({
     rating: 5,
-    reviewText: ''
+    reviewText: "",
   });
 
   // Delete confirmation states
@@ -48,13 +48,20 @@ function ProductDetails() {
     setReviewLoading(true);
     fetchReviewForSelectedproduct(id)
       .then((data) => {
+        // Handle both success and graceful failure cases
         setReviews(data.reviews || []);
         setReviewLoading(false);
+        
+        // Only log errors that aren't "no reviews found"
+        if (data.success === false && data.message !== "No reviews found for this product") {
+          console.warn("Reviews could not be loaded:", data.message);
+        }
       })
       .catch((error) => {
         console.error("Error fetching reviews:", error);
+        setReviews([]); // Set empty array instead of leaving undefined
         setReviewLoading(false);
-        toast.error("Failed to load reviews");
+        // Don't show error toast - just silently handle it for better UX
       });
   };
 
@@ -67,7 +74,7 @@ function ProductDetails() {
     setEditingReview(review);
     setEditForm({
       rating: review.rating,
-      reviewText: review.reviewText
+      reviewText: review.reviewText,
     });
     setShowEditModal(true);
   };
@@ -75,39 +82,43 @@ function ProductDetails() {
   const closeEditModal = () => {
     setShowEditModal(false);
     setEditingReview(null);
-    setEditForm({ rating: 5, reviewText: '' });
+    setEditForm({ rating: 5, reviewText: "" });
   };
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!editForm.reviewText.trim()) {
-      toast.error('Please write a review');
+      toast.error("Please write a review");
       return;
     }
 
     if (!token) {
-      toast.error('Please login to edit review');
+      toast.error("Please login to edit review");
       return;
     }
 
     setEditLoading(true);
-    
+
     try {
-      const response = await updateReview(editingReview._id, {
-        rating: editForm.rating,
-        reviewText: editForm.reviewText.trim()
-      }, token);
-      
+      const response = await updateReview(
+        editingReview._id,
+        {
+          rating: editForm.rating,
+          reviewText: editForm.reviewText.trim(),
+        },
+        token
+      );
+
       console.log("Update response:", response);
-      toast.success('Review updated successfully!');
+      toast.success("Review updated successfully!");
       closeEditModal();
       fetchReviews(); // Refresh reviews
     } catch (err) {
       console.error("Edit error:", err);
-      toast.error(err.message || 'Failed to update review');
+      toast.error(err.message || "Failed to update review");
     }
-    
+
     setEditLoading(false);
   };
 
@@ -123,25 +134,25 @@ function ProductDetails() {
 
   const handleDeleteReview = async () => {
     if (!deletingReviewId) return;
-    
+
     if (!token) {
-      toast.error('Please login to delete review');
+      toast.error("Please login to delete review");
       return;
     }
-    
+
     setDeleteLoading(true);
-    
+
     try {
       const response = await deleteReview(deletingReviewId, token);
       console.log("Delete response:", response);
-      toast.success('Review deleted successfully!');
+      toast.success("Review deleted successfully!");
       closeDeleteConfirm();
       fetchReviews(); // Refresh reviews
     } catch (err) {
       console.error("Delete error:", err);
-      toast.error(err.message || 'Failed to delete review');
+      toast.error(err.message || "Failed to delete review");
     }
-    
+
     setDeleteLoading(false);
   };
 
@@ -211,10 +222,10 @@ function ProductDetails() {
   // Check if current user owns the review
   const isReviewOwner = (review) => {
     if (!user || !review.userId) return false;
-    
+
     const currentUserId = user.id || user._id;
     const reviewUserId = review.userId._id || review.userId;
-    
+
     return String(currentUserId) === String(reviewUserId);
   };
 
@@ -457,7 +468,9 @@ function ProductDetails() {
                   >
                     -
                   </button>
-                  <span className="px-4 py-2 font-medium text-[#5D866C]">{quantity}</span>
+                  <span className="px-4 py-2 font-medium text-[#5D866C]">
+                    {quantity}
+                  </span>
                   <button
                     onClick={() => setQuantity(Math.min(stock, quantity + 1))}
                     className="px-3 py-2 hover:bg-[#E6D8C3] transition-colors text-[#5D866C]"
@@ -575,11 +588,15 @@ function ProductDetails() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-[#C2A68C]">Category:</span>
-                    <span className="font-medium text-[#5D866C]">{category || "General"}</span>
+                    <span className="font-medium text-[#5D866C]">
+                      {category || "General"}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-[#C2A68C]">Stock:</span>
-                    <span className="font-medium text-[#5D866C]">{stock} units</span>
+                    <span className="font-medium text-[#5D866C]">
+                      {stock} units
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-[#C2A68C]">Rating:</span>
@@ -592,7 +609,7 @@ function ProductDetails() {
             </div>
           </div>
 
-          {/* Review Section - Clean Version */}
+          {/* Enhanced Review Section with Better Empty State */}
           <div className="border-t border-[#E6D8C3] p-8">
             <h2 className="text-2xl font-bold text-[#5D866C] mb-6">
               Customer Reviews
@@ -604,17 +621,38 @@ function ProductDetails() {
                 <p className="text-[#5D866C]">Loading reviews...</p>
               </div>
             ) : reviews.length === 0 ? (
-              <div className="text-center py-8">
-                <p className="text-[#C2A68C] text-lg">No reviews yet.</p>
-                <p className="text-[#C2A68C] text-sm mt-2">
-                  Be the first to review this product!
+              <div className="text-center py-12 bg-[#E6D8C3] rounded-xl border border-[#C2A68C]">
+                <div className="text-6xl mb-4">💭</div>
+                <h3 className="text-xl font-semibold text-[#5D866C] mb-2">No Reviews Yet</h3>
+                <p className="text-[#C2A68C] text-lg mb-4">
+                  Be the first to share your experience with this product!
                 </p>
+                <p className="text-[#C2A68C] text-sm">
+                  Your review helps other customers make informed decisions.
+                </p>
+                
+
               </div>
             ) : (
               <div className="space-y-6">
+                {/* Show review count */}
+                <div className="flex items-center justify-between mb-4">
+                  <p className="text-[#C2A68C] font-medium">
+                    {reviews.length} review{reviews.length !== 1 ? 's' : ''} for this product
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
+                      {renderStars(rating)}
+                    </div>
+                    <span className="text-[#5D866C] font-semibold">
+                      {rating > 0 ? rating.toFixed(1) : "0.0"}
+                    </span>
+                  </div>
+                </div>
+
                 {reviews.map((review) => {
                   const isOwner = isReviewOwner(review);
-                  
+
                   return (
                     <div
                       key={review._id}
@@ -624,8 +662,9 @@ function ProductDetails() {
                         <div className="flex items-center gap-3">
                           <div className="w-12 h-12 bg-[#5D866C] rounded-full flex items-center justify-center">
                             <span className="text-white font-semibold text-lg">
-                              {review.userId?.username?.charAt(0).toUpperCase() ||
-                                "U"}
+                              {review.userId?.username
+                                ?.charAt(0)
+                                .toUpperCase() || "U"}
                             </span>
                           </div>
                           <div>
@@ -647,7 +686,7 @@ function ProductDetails() {
                             </div>
                           </div>
                         </div>
-                        
+
                         {/* Edit/Delete Buttons - Only show for review owner */}
                         {isOwner && (
                           <div className="flex gap-2">
@@ -683,11 +722,16 @@ function ProductDetails() {
       {/* Edit Review Modal */}
       {showEditModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={closeEditModal}></div>
+          <div
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={closeEditModal}
+          ></div>
           <div className="relative z-10 bg-white max-w-lg w-full rounded-2xl shadow-xl border border-[#C2A68C] mx-4">
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-2xl font-bold text-[#5D866C]">Edit Review</h3>
+                <h3 className="text-2xl font-bold text-[#5D866C]">
+                  Edit Review
+                </h3>
                 <button
                   onClick={closeEditModal}
                   className="text-[#C2A68C] hover:text-red-500 text-2xl font-light transition-colors duration-200"
@@ -699,15 +743,21 @@ function ProductDetails() {
               <form onSubmit={handleEditSubmit}>
                 {/* Star Rating */}
                 <div className="mb-6">
-                  <label className="block text-[#5D866C] font-semibold mb-2">Rating</label>
+                  <label className="block text-[#5D866C] font-semibold mb-2">
+                    Rating
+                  </label>
                   <div className="flex gap-2">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <button
                         key={star}
                         type="button"
-                        onClick={() => setEditForm({ ...editForm, rating: star })}
+                        onClick={() =>
+                          setEditForm({ ...editForm, rating: star })
+                        }
                         className={`text-3xl transition-colors duration-200 hover:scale-110 ${
-                          star <= editForm.rating ? 'text-[#C2A68C]' : 'text-gray-300'
+                          star <= editForm.rating
+                            ? "text-[#C2A68C]"
+                            : "text-gray-300"
                         }`}
                       >
                         ★
@@ -718,10 +768,14 @@ function ProductDetails() {
 
                 {/* Review Text */}
                 <div className="mb-6">
-                  <label className="block text-[#5D866C] font-semibold mb-2">Review</label>
+                  <label className="block text-[#5D866C] font-semibold mb-2">
+                    Review
+                  </label>
                   <textarea
                     value={editForm.reviewText}
-                    onChange={(e) => setEditForm({ ...editForm, reviewText: e.target.value })}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, reviewText: e.target.value })
+                    }
                     placeholder="Share your experience with this product..."
                     rows={4}
                     className="w-full px-4 py-3 border-2 border-[#C2A68C] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#5D866C] focus:border-[#5D866C] bg-[#F5F5F0] transition-all duration-200"
@@ -749,7 +803,7 @@ function ProductDetails() {
                         Updating...
                       </span>
                     ) : (
-                      'Update Review'
+                      "Update Review"
                     )}
                   </button>
                 </div>
@@ -762,16 +816,22 @@ function ProductDetails() {
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={closeDeleteConfirm}></div>
+          <div
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={closeDeleteConfirm}
+          ></div>
           <div className="relative z-10 bg-white max-w-md w-full rounded-2xl shadow-xl border border-[#C2A68C] mx-4">
             <div className="p-6">
               <div className="text-center">
                 <div className="text-6xl mb-4">🗑️</div>
-                <h3 className="text-xl font-bold text-[#5D866C] mb-2">Delete Review?</h3>
+                <h3 className="text-xl font-bold text-[#5D866C] mb-2">
+                  Delete Review?
+                </h3>
                 <p className="text-[#C2A68C] mb-6">
-                  Are you sure you want to delete this review? This action cannot be undone.
+                  Are you sure you want to delete this review? This action
+                  cannot be undone.
                 </p>
-                
+
                 <div className="flex gap-3">
                   <button
                     onClick={closeDeleteConfirm}
@@ -790,7 +850,7 @@ function ProductDetails() {
                         Deleting...
                       </span>
                     ) : (
-                      'Delete'
+                      "Delete"
                     )}
                   </button>
                 </div>
