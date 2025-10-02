@@ -138,7 +138,7 @@ export const getAllOrders = async (token) => {
 
 export const getOrderDetails = async (orderId, token) => {
   try {
-    const response = await fetch(`${API_URL}/admin/get/one/${orderId}`, {
+    const response = await fetch(`${API_URL}/orders/details/${orderId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -252,7 +252,7 @@ export const deleteReview = async (reviewId, token) => {
 // Additional function for getting vendor applications (if you have this endpoint)
 export const getVendorApplications = async (token) => {
   try {
-    const response = await fetch(`${API_URL}/admin/vendor/applications`, {
+    const response = await fetch(`${API_URL}/admin/get/all/vendor/applications`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -268,6 +268,51 @@ export const getVendorApplications = async (token) => {
     return await response.json();
   } catch (error) {
     console.error('Get vendor applications error:', error);
+    throw error;
+  }
+};
+
+export const updateOrderStatus = async (orderId, status, token) => {
+  try {
+    const response = await fetch(`${API_URL}/orders/update/status/${orderId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ status }),
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ message: 'Failed to update order status' }));
+      throw new Error(errorData.message || 'Failed to update order status');
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Update order status error:', error);
+    throw error;
+  }
+};
+
+export const cancelOrder = async (orderId, token) => {
+  try {
+    const response = await fetch(`${API_URL}/orders/cancel/${orderId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ message: 'Failed to cancel order' }));
+      throw new Error(errorData.message || 'Failed to cancel order');
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Cancel order error:', error);
     throw error;
   }
 };
