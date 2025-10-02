@@ -233,6 +233,39 @@ const reviewsController = {
       });
     }
   }),
+
+  getUserReviewForOneOrder : asyncHandler(async(req,res)=>{
+    try {
+      const userId = req.user.id;
+      const { orderId, productId } = req.params;
+
+      if (!orderId || !productId) {
+        return res.status(400).json({
+          message: "Please provide all required fields",
+        });
+      }
+
+      const review = await Review.findOne({ userId, orderId, productId });
+
+      if (!review) {
+        return res.status(404).json({
+          message: "No review found for this product in the specified order",
+        });
+      }
+
+      res.status(200).json({
+        message: "Review fetched successfully",
+        review,
+      });
+
+
+    } catch (error) {
+      res.status(500).json({
+        message: "Internal server error",
+        error: error.message,
+      });
+    }
+  }),
 };
 
 module.exports = reviewsController;

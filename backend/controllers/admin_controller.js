@@ -4,6 +4,7 @@ const User = require("../model/user_model");
 const Order = require("../model/order_model");
 const Product = require("../model/product_model");
 const Review = require("../model/review_model");
+const { application } = require("express");
 
 const adminController = {
   vendorApproved: asyncHandler(async (req, res) => {
@@ -284,6 +285,33 @@ const adminController = {
     } catch (error) {
       res.status(400).json({
         message: "something going wrong",
+        error: error.message,
+      });
+    }
+  }),
+
+  //! get all vendor Applications
+
+  getAllVendorApplications: asyncHandler(async (req, res) => {
+    try {
+      const userId = req.user.id;
+
+      const vendorApplications = await VendorApplication.find();
+
+      if (!vendorApplications) {
+        res.status(400).json({
+          message: "There isn't any vendor applications yet",
+        });
+      }
+
+      res.status(200).json({
+        message: "Here all vendor applications",
+        applicationCount: vendorApplications.length,
+        applications: vendorApplications,
+      });
+    } catch (error) {
+      res.status(400).json({
+        message: "Something went wrong",
         error: error.message,
       });
     }

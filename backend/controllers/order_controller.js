@@ -287,12 +287,12 @@ const OrderManagementController = {
       String(order.customerId._id) !== String(userId) &&
       req.user.role === "admin"
     ) {
-    return  res.status(403).json({
+      return res.status(403).json({
         message: "You are not authorized to view this order details",
       });
     }
 
-   return res.status(200).json({
+    return res.status(200).json({
       message: "Order details fetched successfully",
       order,
     });
@@ -311,6 +311,7 @@ const OrderManagementController = {
       "delivered",
       "cancelled",
     ];
+
     if (!allowedStatuses.includes(status)) {
       return res.status(400).json({
         message: "Invalid status value",
@@ -322,79 +323,116 @@ const OrderManagementController = {
 
     if (!order) {
       return res.status(404).json({
-        message: " This order not found",
+        message: "This order not found",
       });
     }
 
-    //check if the vendor owned this orders to update status
+    // Fix: Allow admin to update any order status
+    if (req.user.role === "admin") {
+      order.status = status;
+      order.updatedAt = Date.now();
+      await order.save();
+
+      return res.status(200).json({
+        message: "Order status updated successfully by admin",
+        order,
+      });
+    }
+
+    // For vendors, check if they own products in this order
+    if (req.user.role === "vendor") {
+      const vendorProfile = await VendorApplication.findOne({ userId });
+
+      if (!vendorProfile) {
+        return res.status(404).json({
+          message: "Vendor application not found. You are not a vendor anymore",
+        });
+      }
+
+      const isVendorOrder = order.products.some(
+        (item) => String(item.vendorId) === String(vendorProfile.userId)
+      );
+
+      if (!isVendorOrder) {
+        return res.status(403).json({
+          message: "You are not authorized to update this order status",
+        });
+      }
+
+      order.status = status;
+      order.updatedAt = Date.now();
+      await order.save();
+
+      return res.status(200).json({
+        message: "Order status updated successfully",
+        order,
+      });
+    }
+
+    return res.status(403).json({
+      message: "You are not authorized to update order status",
+    });
+  }),
+
+cancelOrder: asyncHandler(async (req, res) => {
+  const userId = req.user.id;
+  const { orderId } = req.params;
+
+  //find order here
+  const order = await Order.findById(orderId);
+  if (!order) {
+    return res.status(404).json({
+      message: "Order not found",
+    });
+  }
+
+  // Fix: Allow admin to cancel any order
+  // Allow customer to cancel their own order
+  let canCancel = false;
+  
+  if (req.user.role === "admin") {
+    canCancel = true;
+  } else if (req.user.role === "consumer" && String(order.customerId) === String(userId)) {
+    canCancel = true;
+  } else if (req.user.role === "vendor") {
+    // Check if vendor has products in this order
     const vendorProfile = await VendorApplication.findOne({ userId });
-
-    if (!vendorProfile) {
-      return res.status(404).json({
-        message: "Vendor application not found You are not vendor anymore",
-      });
+    if (vendorProfile) {
+      const isVendorOrder = order.products.some(
+        (item) => String(item.vendorId) === String(vendorProfile.userId)
+      );
+      canCancel = isVendorOrder;
     }
+  }
 
-    const isVendorOrder = order.products.some(
-      (item) => String(item.vendorId) === String(vendorProfile.userId)
-    );
-
-    if (!isVendorOrder) {
-      return res.status(403).json({
-        message: "You are not authorized to update this order status",
-      });
-    }
-
-    order.status = status;
-    order.updatedAt = Date.now();
-    await order.save();
-
-    res.status(200).json({
-      message: "Order status updated successfully",
-      order,
+  if (!canCancel) {
+    return res.status(403).json({
+      message: "You are not authorized to cancel this order",
     });
-  }),
+  }
 
-  cancelOrder: asyncHandler(async (req, res) => {
-    const userId = req.user.id;
-    const { orderId } = req.params;
+  //refund logic
+  if (order.paymentStatus === "paid") {
+    order.paymentStatus = "refunded";
+  }
 
-    //find order here
-    const order = await Order.findById(orderId);
-    if (!order) {
-      return res.status(404).json({
-        message: "Order not found",
-      });
-    }
+  //set status to cancelled and save the order
+  order.status = "cancelled";
+  order.updatedAt = Date.now();
 
-    //only user who placed the order or admin can cancel the order
-    if (String(order.customerId) !== String(userId)) {
-      return res.status(403).json({
-        message: "You are not authorized to cancel this order",
-      });
-    }
-    //refund logic
-    if (order.paymentStatus === "paid") {
-      order.paymentStatus = "refunded";
-    }
+  await order.save();
 
-    //set status to cancelled and save the order
-    order.status = "cancelled";
-    order.updatedAt = Date.now();
-
-    await order.save();
-
-    //restore product stock
-    for (const item of order.products) {
-      await Product.findByIdAndUpdate(item.productId, {
-        $inc: { stock: item.quantity },
-      });
-    }
-
-    res.status(200).json({
-      message: "Order has been cancelled & payement refunded to you later ...",
-      order,
+  //restore product stock
+  for (const item of order.products) {
+    await Product.findByIdAndUpdate(item.productId, {
+      $inc: { stock: item.quantity },
     });
-  }),
+  }
+
+  res.status(200).json({
+    message: "Order has been cancelled & payment refunded to you later...",
+    order,
+  });
+}),
 };
 module.exports = OrderManagementController;

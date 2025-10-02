@@ -43,6 +43,7 @@ orderManagementRouter.get(
 orderManagementRouter.get(
   "/detials/:orderId",
   isAuthenticatedUser,
+  hasRole(["admin", "vendor", "consumer"]),
   OrderManagementController.getSingleOrderDetails
 );
 
@@ -55,7 +56,7 @@ orderManagementRouter.patch(
   orderManagementRouter.patch(
     "/cancel/:orderId",
     isAuthenticatedUser,
-    hasRole(["consumer", "vendor"]),
+     hasRole(["admin", "consumer", "vendor"]),
     OrderManagementController.cancelOrder
   );
 

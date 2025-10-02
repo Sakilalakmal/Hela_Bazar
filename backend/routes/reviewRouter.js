@@ -19,4 +19,10 @@ reviewRouter.delete(
   reviewsController.deleteReview
 );
 
+reviewRouter.get(
+  "/get/for/order",
+  isAuthenticatedUser,
+  reviewsController.getUserReviewForOneOrder
+);
+
 module.exports = reviewRouter;

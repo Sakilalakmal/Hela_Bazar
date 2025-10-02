@@ -78,4 +78,12 @@ adminRouter.get(
   adminController.getAllReviews
 );
 
+//* get all vendor application
+adminRouter.get(
+  "/get/all/vendor/applications",
+  isAuthenticatedUser,
+  hasRole(["admin"]),
+  adminController.getAllVendorApplications
+);
+
 module.exports = adminRouter;
