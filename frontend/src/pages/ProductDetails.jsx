@@ -198,13 +198,13 @@ function ProductDetails() {
     for (let i = 0; i < 5; i++) {
       if (i < fullStars) {
         stars.push(
-          <span key={i} className="text-[#C2A68C] text-lg">
+          <span key={i} className="text-yellow-500 text-lg">
             ★
           </span>
         );
       } else if (i === fullStars && hasHalfStar) {
         stars.push(
-          <span key={i} className="text-[#C2A68C]/70 text-lg">
+          <span key={i} className="text-yellow-500/70 text-lg">
             ★
           </span>
         );
@@ -231,10 +231,10 @@ function ProductDetails() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#F5F5F0]">
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#5D866C] mx-auto mb-4"></div>
-          <p className="text-xl font-semibold text-[#5D866C]">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-900 mx-auto mb-4"></div>
+          <p className="text-xl font-semibold text-blue-900">
             Loading product details...
           </p>
         </div>
@@ -244,12 +244,12 @@ function ProductDetails() {
 
   if (!product) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#F5F5F0]">
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="text-center">
           <p className="text-red-500 text-xl font-semibold mb-2">
             Product not found
           </p>
-          <p className="text-[#5D866C]">
+          <p className="text-blue-900">
             The product you're looking for doesn't exist.
           </p>
         </div>
@@ -277,14 +277,14 @@ function ProductDetails() {
   const hasDiscount = discount > 0;
 
   return (
-    <div className="min-h-screen bg-[#F5F5F0]">
+    <div className="min-h-screen bg-gray-50">
       <div className="w-full">
         <div className="bg-white">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
             {/* Left Side - Images */}
             <div className="space-y-4">
               {/* Main Image */}
-              <div className="relative bg-[#E6D8C3] rounded-xl overflow-hidden">
+              <div className="relative bg-blue-50 rounded-xl overflow-hidden border border-blue-100">
                 <img
                   src={
                     images[selectedImageIndex] ||
@@ -317,8 +317,8 @@ function ProductDetails() {
                       onClick={() => setSelectedImageIndex(index)}
                       className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
                         selectedImageIndex === index
-                          ? "border-[#5D866C] shadow-md"
-                          : "border-[#E6D8C3] hover:border-[#C2A68C]"
+                          ? "border-blue-900 shadow-md"
+                          : "border-blue-200 hover:border-blue-600"
                       }`}
                     >
                       <img
@@ -334,27 +334,27 @@ function ProductDetails() {
               {/* Customization Options */}
               {product.customizationOptions &&
                 product.customizationOptions.length > 0 && (
-                  <div className="border-t border-[#E6D8C3] p-8">
-                    <h2 className="text-2xl font-bold text-[#5D866C] mb-4">
+                  <div className="border-t border-blue-200 p-8">
+                    <h2 className="text-2xl font-bold text-blue-900 mb-4">
                       Available Customizations
                     </h2>
                     <div className="space-y-4">
                       {product.customizationOptions.map((opt, idx) => (
                         <div
                           key={idx}
-                          className="bg-[#E6D8C3] p-4 rounded-lg border border-[#C2A68C]"
+                          className="bg-blue-50 p-4 rounded-lg border border-blue-200"
                         >
-                          <h3 className="font-semibold text-[#5D866C] mb-2">
+                          <h3 className="font-semibold text-blue-900 mb-2">
                             {opt.type}
                           </h3>
                           {opt.values && opt.values.length > 0 ? (
-                            <ul className="list-disc list-inside space-y-1 text-[#5D866C]">
+                            <ul className="list-disc list-inside space-y-1 text-blue-800">
                               {opt.values.map((val, i) => (
                                 <li key={i}>{val}</li>
                               ))}
                             </ul>
                           ) : (
-                            <p className="text-[#C2A68C] text-sm">
+                            <p className="text-blue-600 text-sm">
                               No details provided
                             </p>
                           )}
@@ -369,10 +369,10 @@ function ProductDetails() {
             <div className="space-y-6">
               {/* Brand & Category */}
               <div className="flex items-center gap-3">
-                <span className="text-sm font-medium text-[#5D866C] bg-[#E6D8C3] px-3 py-1 rounded-full">
+                <span className="text-sm font-medium text-white bg-blue-900 px-3 py-1 rounded-full">
                   {brand || "No Brand"}
                 </span>
-                <span className="text-sm text-[#C2A68C] bg-[#F5F5F0] px-3 py-1 rounded-full">
+                <span className="text-sm text-blue-700 bg-blue-100 px-3 py-1 rounded-full">
                   {category || "General"}
                 </span>
                 <span
@@ -388,7 +388,7 @@ function ProductDetails() {
 
               {/* Product Title */}
               <div>
-                <h1 className="text-3xl font-bold text-[#5D866C] mb-2">
+                <h1 className="text-3xl font-bold text-blue-900 mb-2">
                   {name}
                 </h1>
               </div>
@@ -398,22 +398,22 @@ function ProductDetails() {
                 <div className="flex items-center gap-1">
                   {renderStars(rating)}
                 </div>
-                <span className="text-lg font-semibold text-[#5D866C]">
+                <span className="text-lg font-semibold text-blue-900">
                   {rating > 0 ? rating.toFixed(1) : "0.0"}
                 </span>
                 {reviewCount > 0 && (
-                  <span className="text-[#C2A68C] hover:text-[#5D866C] hover:underline cursor-pointer transition-colors">
+                  <span className="text-blue-600 hover:text-blue-900 hover:underline cursor-pointer transition-colors">
                     ({reviewCount} customer reviews)
                   </span>
                 )}
               </div>
 
               {/* Price */}
-              <div className="border-t border-b border-[#E6D8C3] py-4">
+              <div className="border-t border-b border-blue-200 py-4">
                 <div className="flex items-center gap-3">
                   {hasDiscount ? (
                     <>
-                      <span className="text-3xl font-bold text-[#C2A68C]">
+                      <span className="text-3xl font-bold text-blue-900">
                         ${discountedPrice.toFixed(2)}
                       </span>
                       <span className="text-xl text-gray-500 line-through">
@@ -424,7 +424,7 @@ function ProductDetails() {
                       </span>
                     </>
                   ) : (
-                    <span className="text-3xl font-bold text-[#5D866C]">
+                    <span className="text-3xl font-bold text-blue-900">
                       ${price.toFixed(2)}
                     </span>
                   )}
@@ -433,21 +433,21 @@ function ProductDetails() {
 
               {/* Vendor Info */}
               {vendorId && (
-                <div className="bg-[#E6D8C3] rounded-lg p-4 border border-[#C2A68C]">
-                  <h3 className="text-sm font-semibold text-[#5D866C] mb-2">
+                <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                  <h3 className="text-sm font-semibold text-blue-900 mb-2">
                     Sold by
                   </h3>
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-[#5D866C] rounded-full flex items-center justify-center">
+                    <div className="w-10 h-10 bg-blue-900 rounded-full flex items-center justify-center">
                       <span className="text-white font-semibold text-sm">
                         {vendorId.username?.charAt(0).toUpperCase() || "V"}
                       </span>
                     </div>
                     <div>
-                      <p className="font-medium text-[#5D866C]">
+                      <p className="font-medium text-blue-900">
                         {vendorId.username || "Unknown Vendor"}
                       </p>
-                      <p className="text-sm text-[#C2A68C]">
+                      <p className="text-sm text-blue-600">
                         {vendorId.email || "No email provided"}
                       </p>
                     </div>
@@ -457,23 +457,23 @@ function ProductDetails() {
 
               {/* Quantity Selector */}
               <div className="flex items-center gap-4">
-                <span className="text-sm font-medium text-[#5D866C]">
+                <span className="text-sm font-medium text-blue-900">
                   Quantity:
                 </span>
-                <div className="flex items-center border border-[#C2A68C] rounded-lg">
+                <div className="flex items-center border border-blue-300 rounded-lg">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="px-3 py-2 hover:bg-[#E6D8C3] transition-colors text-[#5D866C]"
+                    className="px-3 py-2 hover:bg-blue-50 transition-colors text-blue-900"
                     disabled={quantity <= 1}
                   >
                     -
                   </button>
-                  <span className="px-4 py-2 font-medium text-[#5D866C]">
+                  <span className="px-4 py-2 font-medium text-blue-900">
                     {quantity}
                   </span>
                   <button
                     onClick={() => setQuantity(Math.min(stock, quantity + 1))}
-                    className="px-3 py-2 hover:bg-[#E6D8C3] transition-colors text-[#5D866C]"
+                    className="px-3 py-2 hover:bg-blue-50 transition-colors text-blue-900"
                     disabled={quantity >= stock}
                   >
                     +
@@ -484,7 +484,7 @@ function ProductDetails() {
               <div className="my-6">
                 <label
                   htmlFor="customization"
-                  className="block text-sm font-medium text-[#5D866C] mb-2"
+                  className="block text-sm font-medium text-blue-900 mb-2"
                 >
                   Customization (optional)
                 </label>
@@ -492,7 +492,7 @@ function ProductDetails() {
                   id="customization"
                   name="customization"
                   rows={3}
-                  className="w-full px-4 py-3 rounded-lg border border-[#C2A68C] focus:outline-none focus:ring-2 focus:ring-[#5D866C] focus:border-[#5D866C] transition bg-[#F5F5F0]"
+                  className="w-full px-4 py-3 rounded-lg border border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white"
                   placeholder="Describe any custom requests for this product (e.g., gift wrapping, engraving, special instructions)"
                   value={customization}
                   onChange={(e) => setCustomization(e.target.value)}
@@ -505,7 +505,7 @@ function ProductDetails() {
                   onClick={addTocartHandle}
                   className={`w-full py-3 px-6 rounded-lg font-semibold text-lg transition-all ${
                     stock > 0
-                      ? "bg-[#C2A68C] hover:bg-[#C2A68C]/80 text-white"
+                      ? "bg-blue-600 hover:bg-blue-700 text-white"
                       : "bg-gray-300 text-gray-500 cursor-not-allowed"
                   }`}
                   disabled={stock === 0}
@@ -516,7 +516,7 @@ function ProductDetails() {
                 <button
                   className={`w-full py-3 px-6 rounded-lg font-semibold text-lg transition-all ${
                     stock > 0
-                      ? "bg-[#5D866C] hover:bg-[#5D866C]/80 text-white"
+                      ? "bg-blue-900 hover:bg-blue-800 text-white"
                       : "bg-gray-300 text-gray-500 cursor-not-allowed"
                   }`}
                   disabled={stock === 0}
@@ -526,26 +526,26 @@ function ProductDetails() {
 
                 <button
                   onClick={addWishList}
-                  className="w-full py-3 px-6 bg-[#E6D8C3] hover:bg-[#C2A68C]/20 text-[#5D866C] border border-[#C2A68C] rounded-lg font-medium transition-all"
+                  className="w-full py-3 px-6 bg-white hover:bg-blue-50 text-blue-900 border border-blue-300 rounded-lg font-medium transition-all"
                 >
                   Add to Wishlist ♡
                 </button>
 
-                {wishMsg && <p className="mt-2 text-[#C2A68C]">{wishMsg}</p>}
-                {cartMsg && <p className="mt-2 text-[#C2A68C]">{cartMsg}</p>}
+                {wishMsg && <p className="mt-2 text-blue-600">{wishMsg}</p>}
+                {cartMsg && <p className="mt-2 text-blue-600">{cartMsg}</p>}
               </div>
 
               {/* Tags */}
               {tags.length > 0 && (
                 <div>
-                  <h3 className="text-sm font-semibold text-[#5D866C] mb-2">
+                  <h3 className="text-sm font-semibold text-blue-900 mb-2">
                     Tags
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {tags.map((tag, index) => (
                       <span
                         key={index}
-                        className="inline-block bg-[#E6D8C3] text-[#5D866C] text-sm font-medium px-3 py-1 rounded-full border border-[#C2A68C]"
+                        className="inline-block bg-blue-100 text-blue-900 text-sm font-medium px-3 py-1 rounded-full border border-blue-200"
                       >
                         #{tag}
                       </span>
@@ -557,12 +557,12 @@ function ProductDetails() {
           </div>
 
           {/* Product Description Section */}
-          <div className="border-t border-[#E6D8C3] p-8">
-            <h2 className="text-2xl font-bold text-[#5D866C] mb-4">
+          <div className="border-t border-blue-200 p-8">
+            <h2 className="text-2xl font-bold text-blue-900 mb-4">
               Product Description
             </h2>
             <div className="prose max-w-none">
-              <p className="text-[#5D866C] leading-relaxed text-lg">
+              <p className="text-blue-800 leading-relaxed text-lg">
                 {description ||
                   "No detailed description available for this product."}
               </p>
@@ -570,37 +570,37 @@ function ProductDetails() {
           </div>
 
           {/* Product Specifications */}
-          <div className="border-t border-[#E6D8C3] p-8">
-            <h2 className="text-2xl font-bold text-[#5D866C] mb-4">
+          <div className="border-t border-blue-200 p-8">
+            <h2 className="text-2xl font-bold text-blue-900 mb-4">
               Product Details
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-[#E6D8C3] p-4 rounded-lg border border-[#C2A68C]">
-                <h3 className="font-semibold text-[#5D866C] mb-2">
+              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                <h3 className="font-semibold text-blue-900 mb-2">
                   Basic Information
                 </h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-[#C2A68C]">Brand:</span>
-                    <span className="font-medium text-[#5D866C]">
+                    <span className="text-blue-600">Brand:</span>
+                    <span className="font-medium text-blue-900">
                       {brand || "Not specified"}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[#C2A68C]">Category:</span>
-                    <span className="font-medium text-[#5D866C]">
+                    <span className="text-blue-600">Category:</span>
+                    <span className="font-medium text-blue-900">
                       {category || "General"}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[#C2A68C]">Stock:</span>
-                    <span className="font-medium text-[#5D866C]">
+                    <span className="text-blue-600">Stock:</span>
+                    <span className="font-medium text-blue-900">
                       {stock} units
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[#C2A68C]">Rating:</span>
-                    <span className="font-medium text-[#5D866C]">
+                    <span className="text-blue-600">Rating:</span>
+                    <span className="font-medium text-blue-900">
                       {rating}/5 ({reviewCount} reviews)
                     </span>
                   </div>
@@ -610,41 +610,39 @@ function ProductDetails() {
           </div>
 
           {/* Enhanced Review Section with Better Empty State */}
-          <div className="border-t border-[#E6D8C3] p-8">
-            <h2 className="text-2xl font-bold text-[#5D866C] mb-6">
+          <div className="border-t border-blue-200 p-8">
+            <h2 className="text-2xl font-bold text-blue-900 mb-6">
               Customer Reviews
             </h2>
 
             {reviewLoading ? (
               <div className="flex items-center justify-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#5D866C] mr-3"></div>
-                <p className="text-[#5D866C]">Loading reviews...</p>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-900 mr-3"></div>
+                <p className="text-blue-900">Loading reviews...</p>
               </div>
             ) : reviews.length === 0 ? (
-              <div className="text-center py-12 bg-[#E6D8C3] rounded-xl border border-[#C2A68C]">
+              <div className="text-center py-12 bg-blue-50 rounded-xl border border-blue-200">
                 <div className="text-6xl mb-4">💭</div>
-                <h3 className="text-xl font-semibold text-[#5D866C] mb-2">No Reviews Yet</h3>
-                <p className="text-[#C2A68C] text-lg mb-4">
+                <h3 className="text-xl font-semibold text-blue-900 mb-2">No Reviews Yet</h3>
+                <p className="text-blue-600 text-lg mb-4">
                   Be the first to share your experience with this product!
                 </p>
-                <p className="text-[#C2A68C] text-sm">
+                <p className="text-blue-600 text-sm">
                   Your review helps other customers make informed decisions.
                 </p>
-                
-
               </div>
             ) : (
               <div className="space-y-6">
                 {/* Show review count */}
                 <div className="flex items-center justify-between mb-4">
-                  <p className="text-[#C2A68C] font-medium">
+                  <p className="text-blue-600 font-medium">
                     {reviews.length} review{reviews.length !== 1 ? 's' : ''} for this product
                   </p>
                   <div className="flex items-center gap-2">
                     <div className="flex items-center gap-1">
                       {renderStars(rating)}
                     </div>
-                    <span className="text-[#5D866C] font-semibold">
+                    <span className="text-blue-900 font-semibold">
                       {rating > 0 ? rating.toFixed(1) : "0.0"}
                     </span>
                   </div>
@@ -656,11 +654,11 @@ function ProductDetails() {
                   return (
                     <div
                       key={review._id}
-                      className="bg-[#E6D8C3] rounded-lg p-6 border border-[#C2A68C] hover:shadow-md transition-shadow duration-200"
+                      className="bg-blue-50 rounded-lg p-6 border border-blue-200 hover:shadow-md transition-shadow duration-200"
                     >
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 bg-[#5D866C] rounded-full flex items-center justify-center">
+                          <div className="w-12 h-12 bg-blue-900 rounded-full flex items-center justify-center">
                             <span className="text-white font-semibold text-lg">
                               {review.userId?.username
                                 ?.charAt(0)
@@ -668,18 +666,18 @@ function ProductDetails() {
                             </span>
                           </div>
                           <div>
-                            <p className="font-semibold text-[#5D866C] text-lg">
+                            <p className="font-semibold text-blue-900 text-lg">
                               {review.userId?.username || "Anonymous User"}
                             </p>
                             <div className="flex items-center gap-2 mt-1">
                               <div className="flex items-center gap-1">
                                 {renderStars(review.rating)}
                               </div>
-                              <span className="text-sm text-[#C2A68C] font-medium">
+                              <span className="text-sm text-blue-600 font-medium">
                                 {review.rating}/5
                               </span>
                               {review.createdAt && (
-                                <span className="text-sm text-[#C2A68C] ml-2">
+                                <span className="text-sm text-blue-600 ml-2">
                                   • {new Date(review.createdAt).toLocaleDateString()}
                                 </span>
                               )}
@@ -692,7 +690,7 @@ function ProductDetails() {
                           <div className="flex gap-2">
                             <button
                               onClick={() => openEditModal(review)}
-                              className="bg-[#5D866C] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#5D866C]/80 transition-colors duration-200 flex items-center gap-2"
+                              className="bg-blue-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-800 transition-colors duration-200 flex items-center gap-2"
                             >
                               <span>✏️</span>
                               Edit
@@ -707,7 +705,7 @@ function ProductDetails() {
                           </div>
                         )}
                       </div>
-                      <p className="text-[#5D866C] leading-relaxed text-base">
+                      <p className="text-blue-800 leading-relaxed text-base">
                         {review.reviewText || "No review text provided."}
                       </p>
                     </div>
@@ -726,15 +724,15 @@ function ProductDetails() {
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={closeEditModal}
           ></div>
-          <div className="relative z-10 bg-white max-w-lg w-full rounded-2xl shadow-xl border border-[#C2A68C] mx-4">
+          <div className="relative z-10 bg-white max-w-lg w-full rounded-2xl shadow-xl border border-blue-200 mx-4">
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-2xl font-bold text-[#5D866C]">
+                <h3 className="text-2xl font-bold text-blue-900">
                   Edit Review
                 </h3>
                 <button
                   onClick={closeEditModal}
-                  className="text-[#C2A68C] hover:text-red-500 text-2xl font-light transition-colors duration-200"
+                  className="text-blue-600 hover:text-red-500 text-2xl font-light transition-colors duration-200"
                 >
                   ×
                 </button>
@@ -743,7 +741,7 @@ function ProductDetails() {
               <form onSubmit={handleEditSubmit}>
                 {/* Star Rating */}
                 <div className="mb-6">
-                  <label className="block text-[#5D866C] font-semibold mb-2">
+                  <label className="block text-blue-900 font-semibold mb-2">
                     Rating
                   </label>
                   <div className="flex gap-2">
@@ -756,7 +754,7 @@ function ProductDetails() {
                         }
                         className={`text-3xl transition-colors duration-200 hover:scale-110 ${
                           star <= editForm.rating
-                            ? "text-[#C2A68C]"
+                            ? "text-yellow-500"
                             : "text-gray-300"
                         }`}
                       >
@@ -768,7 +766,7 @@ function ProductDetails() {
 
                 {/* Review Text */}
                 <div className="mb-6">
-                  <label className="block text-[#5D866C] font-semibold mb-2">
+                  <label className="block text-blue-900 font-semibold mb-2">
                     Review
                   </label>
                   <textarea
@@ -778,7 +776,7 @@ function ProductDetails() {
                     }
                     placeholder="Share your experience with this product..."
                     rows={4}
-                    className="w-full px-4 py-3 border-2 border-[#C2A68C] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#5D866C] focus:border-[#5D866C] bg-[#F5F5F0] transition-all duration-200"
+                    className="w-full px-4 py-3 border-2 border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white transition-all duration-200"
                     required
                   />
                 </div>
@@ -788,14 +786,14 @@ function ProductDetails() {
                   <button
                     type="button"
                     onClick={closeEditModal}
-                    className="flex-1 bg-[#E6D8C3] text-[#5D866C] py-3 rounded-xl font-semibold hover:bg-[#C2A68C]/20 border border-[#C2A68C] transition-colors duration-200"
+                    className="flex-1 bg-blue-100 text-blue-900 py-3 rounded-xl font-semibold hover:bg-blue-200 border border-blue-300 transition-colors duration-200"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={editLoading}
-                    className="flex-1 bg-[#5D866C] text-white py-3 rounded-xl font-semibold hover:bg-[#5D866C]/80 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 bg-blue-900 text-white py-3 rounded-xl font-semibold hover:bg-blue-800 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {editLoading ? (
                       <span className="flex items-center justify-center gap-2">
@@ -820,14 +818,14 @@ function ProductDetails() {
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={closeDeleteConfirm}
           ></div>
-          <div className="relative z-10 bg-white max-w-md w-full rounded-2xl shadow-xl border border-[#C2A68C] mx-4">
+          <div className="relative z-10 bg-white max-w-md w-full rounded-2xl shadow-xl border border-blue-200 mx-4">
             <div className="p-6">
               <div className="text-center">
                 <div className="text-6xl mb-4">🗑️</div>
-                <h3 className="text-xl font-bold text-[#5D866C] mb-2">
+                <h3 className="text-xl font-bold text-blue-900 mb-2">
                   Delete Review?
                 </h3>
-                <p className="text-[#C2A68C] mb-6">
+                <p className="text-blue-600 mb-6">
                   Are you sure you want to delete this review? This action
                   cannot be undone.
                 </p>
@@ -835,7 +833,7 @@ function ProductDetails() {
                 <div className="flex gap-3">
                   <button
                     onClick={closeDeleteConfirm}
-                    className="flex-1 bg-[#E6D8C3] text-[#5D866C] py-3 rounded-xl font-semibold hover:bg-[#C2A68C]/20 border border-[#C2A68C] transition-colors duration-200"
+                    className="flex-1 bg-blue-100 text-blue-900 py-3 rounded-xl font-semibold hover:bg-blue-200 border border-blue-300 transition-colors duration-200"
                   >
                     Cancel
                   </button>
